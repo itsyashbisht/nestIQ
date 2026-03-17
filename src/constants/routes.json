@@ -1,0 +1,51 @@
+{
+  "USER": {
+    "REGISTER": "/api/v1/user/register",
+    "LOGIN": "/api/v1/user/login",
+    "LOGOUT": "/api/v1/user/logout",
+    "GET_ME": "/api/v1/user/me",
+    "UPDATE_DETAILS": "/api/v1/user/update-details",
+    "CHANGE_PASSWORD": "/api/v1/user/change-password",
+    "GET_ALL_USERS": "/api/v1/user/all-users"
+  },
+  "HOTEL": {
+    "GET_ALL": "/api/v1/hotel/hotels",
+    "GET_BY_ID": "/api/v1/hotel/:hotelId",
+    "GET_BY_SLUG": "/api/v1/hotel/slug/:slug",
+    "CREATE": "/api/v1/hotel/create",
+    "UPDATE": "/api/v1/hotel/update/:hotelId",
+    "DELETE": "/api/v1/hotel/delete/:hotelId",
+    "SEARCH": "/api/v1/hotel/search"
+  },
+  "ROOM": {
+    "GET_BY_HOTEL": "/api/v1/room/:hotelId/rooms",
+    "CREATE": "/api/v1/room/:hotelId/create",
+    "UPDATE": "/api/v1/room/update/:roomId",
+    "DELETE": "/api/v1/room/delete/:roomId"
+  },
+  "BOOKING": {
+    "CREATE": "/api/v1/booking/create",
+    "GET_MY_BOOKINGS": "/api/v1/booking/my-bookings",
+    "GET_BY_ID": "/api/v1/booking/:bookingId",
+    "CANCEL": "/api/v1/booking/cancel/:bookingId",
+    "GET_ALL": "/api/v1/booking/all-bookings",
+    "UPDATE_STATUS": "/api/v1/booking/update-status/:bookingId"
+  },
+  "REVIEW": {
+    "ADD": "/api/v1/review/:hotelId/add",
+    "REMOVE": "/api/v1/review/remove/:reviewId",
+    "GET_BY_HOTEL": "/api/v1/review/:hotelId/reviews"
+  },
+  "PAYMENT": {
+    "CREATE_ORDER": "/api/v1/payment/create-order",
+    "VERIFY": "/api/v1/payment/verify",
+    "GET_KEY": "/api/v1/payment/razorpay-key"
+  },
+  "AI": {
+    "SEARCH": "/api/v1/ai/search",
+    "BUDGET": "/api/v1/ai/budget",
+    "CHAT": "/api/v1/ai/chat",
+    "REVIEW_SUMMARY": "/api/v1/ai/review-summary",
+    "LISTING": "/api/v1/ai/listing"
+  }
+}

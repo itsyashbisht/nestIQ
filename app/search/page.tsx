@@ -1,12 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, MapPin, Star } from 'lucide-react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
-import HeroSearch from '../components/HeroSearch';
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import HeroSearch from '@/components/HeroSearch';
 import { hotelService } from '@/src/apiServices/hotel.services';
 import type { IHotel } from '@/src/types';
-import heroImg from '../public/hero.jpg';
 
 /* ── Static data ─────────────────────────────────────────────── */
 const bentoImages = [
@@ -175,7 +174,8 @@ export default async function HomePage() {
         }}
       >
         <Image
-          src={heroImg}
+          src="https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=2400&q=90"
+          alt="NestIQ hero"
           fill
           priority
           quality={90}
@@ -654,7 +654,7 @@ export default async function HomePage() {
                           fontFamily: 'Inter, sans-serif',
                           transition: 'transform 0.22s, border-color 0.22s, color 0.22s',
                         }}
-                        className="faq-icon"
+                        className="group-open:rotate-45 group-open:border-black group-open:text-black"
                       >
                         +
                       </span>
