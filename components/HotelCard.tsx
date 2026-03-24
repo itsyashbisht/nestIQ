@@ -1,90 +1,174 @@
-import Image from "next/image";
-import Link from "next/link";
-import {MapPin, Star} from "lucide-react";
-import type {IHotel} from "@/src/types";
+import Link from 'next/link';
+import { Heart, MapPin, Sparkles, Star } from 'lucide-react';
+// @ts-ignore
+import { Hotel } from '@/types';
+import { cn, formatCurrency } from '@/src/lib/utils';
 
-interface Props {
-    hotel: IHotel;
+interface HotelCardProps {
+  hotel: Hotel;
+  variant?: 'default' | 'horizontal' | 'featured';
+  className?: string;
 }
 
-export default function HotelCard({hotel}: Props) {
+export default function HotelCard({ hotel, variant = 'default', className }: HotelCardProps) {
+  if (variant === 'horizontal') {
     return (
-        <Link href={`/hotels/${hotel.slug}`} className="group block">
-            <div
-                className="bg-white rounded-2xl overflow-hidden border border-[#e8e8e4] hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-
-                {/* Image */}
-                <div className="relative aspect-[3/2] overflow-hidden">
-                    <Image
-                        src={
-                            hotel.images?.[0]?.url ??
-                            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600"
-                        }
-                        alt={hotel.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
-                    />
-                    {/* Category badge */}
-                    <div className="absolute top-3 left-3">
-            <span
-                className="px-2.5 py-1 rounded-full text-xs font-medium bg-black/50 backdrop-blur-sm text-white capitalize">
-              {hotel.category}
-            </span>
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-4">
-                    <h3
-                        className="text-[#0f0f0f] text-base mb-1 group-hover:text-[#E07B39] transition-colors truncate"
-                        style={{
-                            fontFamily: "Mona Sans, Inter, sans-serif",
-                            fontWeight: 600,
-                            letterSpacing: "-0.01em",
-                        }}
-                    >
-                        {hotel.name}
-                    </h3>
-
-                    <div className="flex items-center gap-1 text-xs text-[#999] mb-3">
-                        <MapPin size={12}/>
-                        {hotel.city}, {hotel.state}
-                    </div>
-
-                    {/* Vibes */}
-                    <div className="flex flex-wrap gap-1 mb-3">
-                        {hotel.vibes.slice(0, 2).map((vibe) => (
-                            <span
-                                key={vibe}
-                                className="px-2 py-0.5 rounded-full text-xs bg-[#F5F4EF] text-[#666] border border-[#e8e8e4] capitalize"
-                            >
-                {vibe}
-              </span>
-                        ))}
-                    </div>
-
-                    {/* Rating + Price */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                            <Star size={13} className="fill-[#E07B39] text-[#E07B39]"/>
-                            <span className="text-sm font-semibold text-[#0f0f0f]">
-                {hotel.rating}
-              </span>
-                            <span className="text-xs text-[#bbb]">({hotel.reviewCount})</span>
-                        </div>
-                        <div>
-              <span
-                  className="font-bold text-[#0f0f0f] text-base"
-                  style={{fontFamily: "Mona Sans, Inter, sans-serif"}}
-              >
-                ₹{hotel.pricePerNight.toLocaleString("en-IN")}
-              </span>
-                            <span className="text-xs text-[#aaa]">/night</span>
-                        </div>
-                    </div>
-                </div>
+      <Link
+        href={`/hotels/${hotel.id}`}
+        className={cn(
+          'card-editorial flex gap-0 overflow-hidden group hover:-translate-y-1 transition-transform duration-300',
+          className
+        )}
+      >
+        <div className="w-48 shrink-0 overflow-hidden">
+          <img
+            src={hotel.image}
+            alt={hotel.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <div className="p-5 flex flex-col justify-between flex-1">
+          <div>
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {hotel.tags.slice(0, 2).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10px] font-semibold px-2.5 py-1 rounded-full"
+                  style={{ background: 'var(--secondary-container)', color: 'var(--secondary)' }}
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
-        </Link>
+            <h3 className="font-poppins font-semibold text-base text-on-surface mb-1">
+              {hotel.name}
+            </h3>
+            <div className="flex items-center gap-1 text-xs text-primary">
+              <MapPin size={11} />
+              <span>{hotel.location}</span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <Star size={13} fill="#9b4701" className="text-secondary" />
+              <span className="text-sm font-semibold text-secondary">{hotel.rating}</span>
+              <span className="text-xs text-primary">({hotel.reviews.toLocaleString()})</span>
+            </div>
+            <div className="text-right">
+              <span className="text-base font-bold text-on-surface">
+                {formatCurrency(hotel.price)}
+              </span>
+              <span className="text-xs text-primary">/nt</span>
+            </div>
+          </div>
+        </div>
+      </Link>
     );
+  }
+
+  if (variant === 'featured') {
+    return (
+      <Link
+        href={`/hotels/${hotel.id}`}
+        className={cn('relative group rounded-4xl overflow-hidden h-105 block', className)}
+      >
+        <img
+          src={hotel.image}
+          alt={hotel.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        {hotel.aiMatch && (
+          <div className="absolute top-4 left-4 glass-dark text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <Sparkles size={11} className="text-amber-400" />
+            {hotel.aiMatch}% Match
+          </div>
+        )}
+        <button className="absolute top-4 right-4 w-9 h-9 glass-card rounded-full flex items-center justify-center hover:bg-white transition-colors">
+          <Heart size={15} className="text-on-surface" />
+        </button>
+        <div className="absolute bottom-0 left-0 right-0 p-6">
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {hotel.tags.slice(0, 2).map((tag) => (
+              <span
+                key={tag}
+                className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+          <h3 className="font-poppins font-bold text-xl text-white mb-1">{hotel.name}</h3>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <MapPin size={12} className="text-white/70" />
+              <span className="text-sm text-white/80">{hotel.location}</span>
+            </div>
+            <span className="text-white font-bold">
+              {formatCurrency(hotel.price)}
+              <span className="text-white/60 text-xs font-normal">/nt</span>
+            </span>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  return (
+    <Link
+      href={`/hotels/${hotel.id}`}
+      className={cn(
+        'card-editorial group hover:-translate-y-1 transition-transform duration-300 block',
+        className
+      )}
+    >
+      <div className="relative overflow-hidden h-52 rounded-t-[1.5rem]">
+        <img
+          src={hotel.image}
+          alt={hotel.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        {hotel.aiMatch && (
+          <div className="absolute top-3 left-3 glass-dark text-white text-[10px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+            <Sparkles size={9} className="text-amber-400" />
+            {hotel.aiMatch}%
+          </div>
+        )}
+        <button className="absolute top-3 right-3 w-8 h-8 glass-card rounded-full flex items-center justify-center hover:bg-white transition-colors">
+          <Heart size={13} className="text-on-surface" />
+        </button>
+        <div className="absolute bottom-3 left-3 flex flex-wrap gap-1">
+          {hotel.tags.slice(0, 2).map((tag) => (
+            <span
+              key={tag}
+              className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/20 text-white backdrop-blur-sm"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="p-5">
+        <h3 className="font-poppins font-semibold text-base text-on-surface mb-1">{hotel.name}</h3>
+        <div className="flex items-center gap-1 text-xs text-primary mb-3">
+          <MapPin size={11} />
+          <span>{hotel.location}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            <Star size={13} fill="#9b4701" className="text-secondary" />
+            <span className="text-sm font-semibold text-secondary">{hotel.rating}</span>
+            <span className="text-xs text-primary">({hotel.reviews.toLocaleString()})</span>
+          </div>
+          <div>
+            <span className="text-base font-bold text-on-surface">
+              {formatCurrency(hotel.price)}
+            </span>
+            <span className="text-xs text-primary">/nt</span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 }

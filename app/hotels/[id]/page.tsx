@@ -1,467 +1,281 @@
-import Image from 'next/image';
+'use client';
+import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Car, Clock, MapPin, Star, Utensils, Waves, Wifi } from 'lucide-react';
-import Navigation from '../../../components/Navigation';
-import Footer from '../../../components/Footer';
-import HotelChat from '../../../components/HotelChat';
-import BookingPanel from '../../../components/BookingPanel';
+import { ArrowLeft, Check, ChevronRight, Heart, MapPin, Share2, Star } from 'lucide-react';
+import Navbar from '@/components/layouts/Navigation';
+import Footer from '@/components/layouts/Footer';
+import { AIInsight, Badge } from '@/components/index.tsx';
+import { MOCK_HOTELS } from '@/src/lib/data';
+import { formatCurrency } from '@/src/lib/utils';
 
-interface Props {
-  params: Promise<{ id: string }>;
-}
+export default function HotelDetailPage({ params }: { params: { id: string } }) {
+  const hotel = MOCK_HOTELS.find((h) => h.id === params.id) || MOCK_HOTELS[0];
+  const [activeImage, setActiveImage] = useState(0);
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [guests, setGuests] = useState(2);
+  const [saved, setSaved] = useState(false);
 
-// Amenity icon map
-const amenityIcons: Record<string, React.ReactNode> = {
-  'Free WiFi': <Wifi size={14} />,
-  Parking: <Car size={14} />,
-  Restaurant: <Utensils size={14} />,
-  Pool: <Waves size={14} />,
-};
-
-async function getHotel(slug: string) {
-  try {
-    const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
-    const res = await fetch(`${BASE}/api/v1/hotel/slug/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export default async function HotelDetailPage({ params }: Props) {
-  const { id } = await params;
-  const hotel = await getHotel(id);
-
-  // Fallback when no backend
-  const h = hotel ?? {
-    _id: id,
-    name: 'Azure Cove Resort & Spa',
-    slug: id,
-    description:
-      'A pristine oceanfront retreat offering world-class suites, infinity pools overlooking the turquoise sea, and personalised luxury service that anticipates your every need. Nestled between the ocean and lush tropical gardens, every detail has been crafted to deliver an exceptional stay.',
-    city: 'Maldives',
-    state: 'Islands',
-    address: 'North Malé Atoll, Maldives',
-    category: 'luxury',
-    vibes: ['romantic', 'wellness', 'adventure'],
-    rating: 5.0,
-    reviewCount: 142,
-    pricePerNight: 18500,
-    checkInTime: '14:00',
-    checkOutTime: '11:00',
-    images: [
-      { url: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200&q=90' },
-      { url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=85' },
-      { url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=85' },
-      { url: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=85' },
-      { url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=85' },
-    ],
-    amenities: [
-      'Free WiFi',
-      'Pool',
-      'Spa',
-      'Restaurant',
-      'Bar',
-      'Parking',
-      'Airport Transfer',
-      'Room Service',
-      'Gym',
-      'Beachfront',
-    ],
-    nearbyAttractions: ['Coral Gardens', 'Sunset Point', 'Local Market', 'Water Sports Centre'],
-  };
-
-  const imgs = h.images ?? [];
+  const nights =
+    checkIn && checkOut
+      ? Math.max(0, (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000)
+      : 0;
 
   return (
-    <>
-      <Navigation />
-      <div style={{ minHeight: '100vh', background: '#fff', paddingTop: 68 }}>
-        {/* ── Photo gallery bento ─────────────────────────────── */}
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '1.5rem 3rem 0' }}>
+    <div className="min-h-screen" style={{ background: 'var(--surface)' }}>
+      <Navbar />
+      <div className="pt-20">
+        {/* Breadcrumb */}
+        <div className="max-w-7xl mx-auto px-6 py-5">
           <Link
             href="/search"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: '0.8125rem',
-              color: '#888',
-              fontFamily: 'Inter, sans-serif',
-              marginBottom: '1rem',
-              textDecoration: 'none',
-            }}
+            className="inline-flex items-center gap-2 text-sm text-primary hover:text-on-surface transition-colors"
           >
-            <ArrowLeft size={14} /> Back to Search
+            <ArrowLeft size={16} /> Back to search
           </Link>
+        </div>
 
-          {/* Gallery grid — 1 large + 4 small like AirBnb */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gridTemplateRows: '280px 280px',
-              gap: 8,
-              borderRadius: 20,
-              overflow: 'hidden',
-            }}
-          >
-            {/* Main large */}
-            <div style={{ gridRow: '1 / 3', position: 'relative' }} className="img-zoom">
-              <Image
-                src={
-                  imgs[0]?.url ??
-                  'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200&q=90'
-                }
-                alt={h.name}
-                fill
-                style={{ objectFit: 'cover' }}
-                priority
-                sizes="50vw"
+        <div className="max-w-7xl mx-auto px-6 pb-20">
+          {/* Title row */}
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
+            <div>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {hotel.tags.map((tag) => (
+                  <Badge key={tag} variant="amber">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+              <h1
+                className="font-poppins font-black text-3xl md:text-4xl text-on-surface mb-2"
+                style={{ letterSpacing: '-0.03em' }}
+              >
+                {hotel.name}
+              </h1>
+              <div className="flex flex-wrap items-center gap-4 text-sm">
+                <div className="flex items-center gap-1.5">
+                  <Star size={15} fill="#9b4701" className="text-secondary" />
+                  <span className="font-semibold text-secondary">{hotel.rating}</span>
+                  <span className="text-primary">({hotel.reviews.toLocaleString()} reviews)</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-primary">
+                  <MapPin size={14} />
+                  <span>{hotel.location}</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 flex-shrink-0">
+              <button
+                onClick={() => setSaved(!saved)}
+                className={`p-3 rounded-xl border transition-all ${saved ? 'border-secondary bg-secondary-container text-secondary' : 'border-surface-container-high hover:bg-surface-container-low text-primary'}`}
+              >
+                <Heart size={18} fill={saved ? '#9b4701' : 'none'} />
+              </button>
+              <button className="p-3 rounded-xl border border-surface-container-high hover:bg-surface-container-low text-primary transition-all">
+                <Share2 size={18} />
+              </button>
+            </div>
+          </div>
+
+          {/* Image Gallery */}
+          <div className="grid grid-cols-4 grid-rows-2 gap-3 h-[420px] mb-12 rounded-[2rem] overflow-hidden">
+            <div
+              className="col-span-2 row-span-2 overflow-hidden cursor-pointer"
+              onClick={() => setActiveImage(0)}
+            >
+              <img
+                src={hotel.images[0]}
+                alt={hotel.name}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
-            {/* 4 smaller */}
-            {[1, 2, 3].map((i) => (
-              <div key={i} style={{ position: 'relative' }} className="img-zoom">
-                <Image
-                  src={
-                    imgs[i]?.url ??
-                    `https://images.unsplash.com/photo-${1566073771259 + i * 1000000}-${i}?w=600&q=80`
-                  }
+            {hotel.images.slice(1, 4).map((img, i) => (
+              <div
+                key={i}
+                className="overflow-hidden cursor-pointer"
+                onClick={() => setActiveImage(i + 1)}
+              >
+                <img
+                  src={img}
                   alt=""
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="25vw"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
             ))}
-            {/* Last with +more overlay */}
-            <div style={{ position: 'relative' }} className="img-zoom">
-              <Image
-                src={
-                  imgs[4]?.url ??
-                  'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=85'
-                }
-                alt=""
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="25vw"
-              />
-              {imgs.length > 5 && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <span
-                    style={{
-                      color: '#fff',
-                      fontSize: '0.9rem',
-                      fontWeight: 600,
-                      fontFamily: 'Poppins, sans-serif',
-                    }}
-                  >
-                    +{imgs.length - 5} photos
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Main content ────────────────────────────────────── */}
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '2.5rem 3rem 5rem' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 380px',
-              gap: '3.5rem',
-              alignItems: 'start',
-            }}
-          >
-            {/* Left ─── */}
-            <div>
-              {/* Header */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between',
-                  gap: '2rem',
-                  marginBottom: '1.25rem',
-                }}
-              >
-                <div>
-                  <div style={{ display: 'flex', gap: 8, marginBottom: '0.5rem' }}>
-                    {h.vibes?.slice(0, 3).map((v: string) => (
-                      <span
-                        key={v}
-                        style={{
-                          padding: '0.2rem 0.65rem',
-                          borderRadius: 9999,
-                          fontSize: '0.7rem',
-                          fontWeight: 500,
-                          background: '#F5F5F5',
-                          color: '#555',
-                          fontFamily: 'Inter, sans-serif',
-                          textTransform: 'capitalize',
-                        }}
-                      >
-                        {v}
-                      </span>
-                    ))}
-                  </div>
-                  <h1
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                      fontWeight: 700,
-                      letterSpacing: '-0.025em',
-                      color: '#111',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {h.name}
-                  </h1>
+            {hotel.images.length < 4 &&
+              Array(4 - hotel.images.length)
+                .fill(null)
+                .map((_, i) => (
                   <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '1.25rem',
-                      flexWrap: 'wrap',
-                    }}
+                    key={`empty-${i}`}
+                    className="overflow-hidden"
+                    style={{ background: 'var(--surface-container)' }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <MapPin size={14} color="#aaa" />
-                      <span
-                        style={{
-                          fontSize: '0.875rem',
-                          color: '#888',
-                          fontFamily: 'Inter, sans-serif',
-                        }}
-                      >
-                        {h.city}, {h.state}
-                      </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Star size={14} style={{ fill: '#E07B39', color: '#E07B39' }} />
-                      <span
-                        style={{
-                          fontSize: '0.875rem',
-                          fontWeight: 600,
-                          color: '#111',
-                          fontFamily: 'Inter, sans-serif',
-                        }}
-                      >
-                        {h.rating}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.8rem',
-                          color: '#bbb',
-                          fontFamily: 'Inter, sans-serif',
-                        }}
-                      >
-                        ({h.reviewCount} reviews)
-                      </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Clock size={14} color="#aaa" />
-                      <span
-                        style={{
-                          fontSize: '0.8rem',
-                          color: '#888',
-                          fontFamily: 'Inter, sans-serif',
-                        }}
-                      >
-                        Check-in {h.checkInTime}
-                      </span>
-                    </div>
+                    <img
+                      src={hotel.images[0]}
+                      alt=""
+                      className="w-full h-full object-cover opacity-60"
+                    />
                   </div>
-                </div>
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                  <p
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontSize: '1.75rem',
-                      fontWeight: 700,
-                      color: '#111',
-                      lineHeight: 1,
-                    }}
-                  >
-                    ₹{h.pricePerNight.toLocaleString('en-IN')}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: '0.75rem',
-                      color: '#aaa',
-                      fontFamily: 'Inter, sans-serif',
-                      marginTop: 2,
-                    }}
-                  >
-                    per night
-                  </p>
-                </div>
-              </div>
+                ))}
+          </div>
 
-              {/* Divider */}
-              <div style={{ borderTop: '1px solid #F0EDE8', margin: '1.5rem 0' }} />
-
-              {/* Description */}
-              <div style={{ marginBottom: '2rem' }}>
-                <h2
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '1.0625rem',
-                    fontWeight: 700,
-                    color: '#111',
-                    marginBottom: '0.75rem',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  About this property
+          {/* Content + Booking widget */}
+          <div className="grid lg:grid-cols-3 gap-10">
+            <div className="lg:col-span-2 space-y-10">
+              {/* About */}
+              <div>
+                <h2 className="font-poppins font-bold text-2xl text-on-surface mb-4">
+                  The Essence of Sanctuary
                 </h2>
-                <p
-                  style={{
-                    fontSize: '0.9rem',
-                    color: '#555',
-                    lineHeight: 1.8,
-                    fontFamily: 'Inter, sans-serif',
-                  }}
-                >
-                  {h.description}
-                </p>
+                <p className="text-primary leading-relaxed">{hotel.description}</p>
               </div>
+
+              {/* AI Insight */}
+              {hotel.aiMatch && (
+                <AIInsight title="AI Match Score">
+                  This property matches your travel profile at <strong>{hotel.aiMatch}%</strong>.
+                  Based on your preference for quiet retreats and architectural landmarks, this
+                  sanctuary is an exceptional fit.
+                </AIInsight>
+              )}
 
               {/* Amenities */}
-              <div style={{ marginBottom: '2rem' }}>
-                <h2
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '1.0625rem',
-                    fontWeight: 700,
-                    color: '#111',
-                    marginBottom: '1rem',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  Amenities
-                </h2>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-                    gap: 10,
-                  }}
-                >
-                  {h.amenities?.map((a: string) => (
+              <div>
+                <h3 className="font-poppins font-semibold text-lg text-on-surface mb-5">
+                  What's Included
+                </h3>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {hotel.amenities.map((a) => (
                     <div
                       key={a}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                        padding: '0.6rem 0.875rem',
-                        borderRadius: 10,
-                        background: '#F7F6F2',
-                        border: '1px solid #F0EDE8',
-                      }}
+                      className="flex items-center gap-3 p-4 rounded-xl transition-colors cursor-pointer hover:bg-surface-container group"
+                      style={{ background: 'var(--surface-container-low)' }}
                     >
-                      <span style={{ color: '#E07B39' }}>
-                        {amenityIcons[a] ?? (
-                          <span
-                            style={{
-                              width: 14,
-                              height: 14,
-                              borderRadius: '50%',
-                              background: '#E07B39',
-                              display: 'inline-block',
-                            }}
-                          />
-                        )}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.8rem',
-                          fontFamily: 'Inter, sans-serif',
-                          color: '#444',
-                        }}
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-secondary flex-shrink-0"
+                        style={{ background: 'var(--secondary-container)' }}
                       >
-                        {a}
-                      </span>
+                        <Check size={14} />
+                      </div>
+                      <span className="text-sm font-medium text-on-surface">{a}</span>
+                      <ChevronRight
+                        size={14}
+                        className="text-primary ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Nearby */}
-              {h.nearbyAttractions?.length > 0 && (
-                <div style={{ marginBottom: '2rem' }}>
-                  <h2
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontSize: '1.0625rem',
-                      fontWeight: 700,
-                      color: '#111',
-                      marginBottom: '1rem',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    Nearby Attractions
-                  </h2>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {h.nearbyAttractions.map((a: string) => (
-                      <span
-                        key={a}
-                        style={{
-                          padding: '0.35rem 0.9rem',
-                          borderRadius: 9999,
-                          fontSize: '0.8rem',
-                          border: '1px solid #E8E6E1',
-                          color: '#555',
-                          fontFamily: 'Inter, sans-serif',
-                        }}
-                      >
-                        📍 {a}
-                      </span>
-                    ))}
+              {/* Location */}
+              <div>
+                <h3 className="font-poppins font-semibold text-lg text-on-surface mb-4">
+                  Location
+                </h3>
+                <div
+                  className="rounded-[1.5rem] overflow-hidden h-48 relative"
+                  style={{ background: 'var(--surface-container)' }}
+                >
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <MapPin size={32} className="text-secondary mx-auto mb-2" />
+                      <p className="font-semibold text-on-surface">{hotel.location}</p>
+                      <p className="text-xs text-primary mt-1">Interactive map coming soon</p>
+                    </div>
                   </div>
                 </div>
-              )}
-
-              {/* AI Chat */}
-              <div style={{ marginBottom: '2rem' }}>
-                <h2
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '1.0625rem',
-                    fontWeight: 700,
-                    color: '#111',
-                    marginBottom: '1rem',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  Ask about this hotel
-                </h2>
-                <HotelChat hotelId={h.slug ?? id} hotelName={h.name} />
               </div>
             </div>
 
-            {/* Right — Booking panel (sticky) ─── */}
-            <div style={{ position: 'sticky', top: 88 }}>
-              <BookingPanel hotel={h} />
+            {/* Booking Widget */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-24 card-editorial p-8 space-y-6">
+                <div>
+                  <p className="text-xs text-primary mb-1">Starting from</p>
+                  <p className="font-poppins font-black text-3xl text-on-surface">
+                    {formatCurrency(hotel.price)}
+                    <span className="text-base font-normal text-primary">/night</span>
+                  </p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <Star size={12} fill="#9b4701" className="text-secondary" />
+                    <span className="text-xs font-semibold text-secondary">{hotel.rating}</span>
+                    <span className="text-xs text-primary">
+                      · {hotel.reviews.toLocaleString()} reviews
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-xs font-medium text-primary mb-1.5 block">
+                        Check-in
+                      </label>
+                      <input
+                        type="date"
+                        value={checkIn}
+                        onChange={(e) => setCheckIn(e.target.value)}
+                        className="input-field text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-primary mb-1.5 block">
+                        Check-out
+                      </label>
+                      <input
+                        type="date"
+                        value={checkOut}
+                        onChange={(e) => setCheckOut(e.target.value)}
+                        className="input-field text-xs"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-primary mb-1.5 block">Guests</label>
+                    <div className="flex items-center gap-3 input-field">
+                      <button
+                        onClick={() => setGuests(Math.max(1, guests - 1))}
+                        className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-on-surface hover:bg-surface-container transition-colors"
+                      >
+                        −
+                      </button>
+                      <span className="flex-1 text-center text-sm font-medium">{guests}</span>
+                      <button
+                        onClick={() => setGuests(guests + 1)}
+                        className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-on-surface hover:bg-surface-container transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {nights > 0 && (
+                  <div className="space-y-2 py-4 border-t border-surface-container text-sm">
+                    <div className="flex justify-between text-primary">
+                      <span>
+                        {formatCurrency(hotel.price)} × {nights} nights
+                      </span>
+                      <span>{formatCurrency(hotel.price * nights)}</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-on-surface pt-2 border-t border-surface-container">
+                      <span>Total</span>
+                      <span>{formatCurrency(hotel.price * nights)}</span>
+                    </div>
+                  </div>
+                )}
+
+                <Link href={`/booking?hotelId=${hotel.id}`} className="btn-primary w-full">
+                  Reserve This Sanctuary
+                </Link>
+                <p className="text-xs text-primary text-center">You won't be charged yet</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

@@ -65,7 +65,7 @@ export default function BookingPanel({ hotel }: Props) {
       }}
     >
       {/* Header */}
-      <div style={{ padding: '1.5rem 1.5rem 1rem', borderBottom: '1px solid #F0EDE8' }}>
+      <div style={{ padding: '1.5rem 1.5rem 1rem', borderBottom: '1px solid #F0EDE8', background: 'linear-gradient(180deg, #FAFAF8 0%, #FFFFFF 100%)' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
           <span
             style={{
@@ -181,7 +181,10 @@ export default function BookingPanel({ hotel }: Props) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#555',
+                  transition: 'background 0.2s ease',
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#F5F5F3'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
               >
                 −
               </button>
@@ -405,6 +408,7 @@ export default function BookingPanel({ hotel }: Props) {
             fontSize: '0.9rem',
             padding: '0.875rem',
             borderRadius: 12,
+            animation: nights > 0 ? 'pulseGlow 2s ease-in-out infinite' : 'none',
           }}
         >
           {nights > 0 ? `Reserve · ₹${total.toLocaleString('en-IN')}` : 'Check Availability'}
