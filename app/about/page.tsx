@@ -1,414 +1,222 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Heart, Shield, Sparkles, Zap } from 'lucide-react';
-import Navigation from '../../components/Navigation';
-import Footer from '../../components/Footer';
+import { ArrowRight, MapPin } from 'lucide-react';
+import Navbar from '@/components/layouts/Navigation';
+import Footer from '@/components/layouts/Footer';
+import { SectionHeader } from '@/components/index.tsx';
 
-const team = [
+const STATS = [
+  { value: '150+', label: 'Hand-Picked Havens' },
+  { value: '24/7', label: 'AI-Concierge Access' },
+  { value: '12', label: 'Indian States Explored' },
+  { value: '98.4%', label: 'Guest Satisfaction' },
+];
+
+const TEAM = [
   {
-    name: 'Arjun Sharma',
-    role: 'Founder & CEO',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80',
+    name: 'Arjun Mehta',
+    role: 'Founder & Chief Curator',
+    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
   },
   {
     name: 'Priya Nair',
-    role: 'Head of Product',
-    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&q=80',
+    role: 'Head of AI & Discovery',
+    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80',
   },
   {
-    name: 'Rohan Mehta',
-    role: 'Lead AI Engineer',
-    img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&q=80',
-  },
-  {
-    name: 'Sneha Krishnan',
-    role: 'Head of Curation',
-    img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&q=80',
+    name: 'James Wren',
+    role: 'Editorial Director',
+    img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80',
   },
 ];
 
-const values = [
+const VALUES = [
   {
-    icon: Sparkles,
-    title: 'AI-First',
-    desc: 'We believe the future of travel discovery is conversational. Not filters — just tell us what you want.',
+    title: 'Curation over Volume',
+    desc: 'We list fewer properties intentionally. Every stay in our portfolio has been personally vetted by our editorial team.',
   },
   {
-    icon: Shield,
-    title: 'Trust & Transparency',
-    desc: 'Every property is verified. Every review is genuine. No paid placements, ever.',
+    title: 'AI with a Human Soul',
+    desc: 'Our technology is a tool for empathy, not replacement. AI handles the data; humans handle the heart.',
   },
   {
-    icon: Heart,
-    title: 'India-Focused',
-    desc: 'Built specifically for the Indian traveler, with deep knowledge of local destinations, seasons, and culture.',
-  },
-  {
-    icon: Zap,
-    title: 'Effortless',
-    desc: 'From search to booking in under two minutes. We remove every unnecessary step from your journey.',
+    title: 'Radical Transparency',
+    desc: 'No hidden fees, no inflated rates. Honest pricing is a non-negotiable pillar of our identity.',
   },
 ];
 
 export default function AboutPage() {
   return (
-    <>
-      <Navigation />
-
-      {/* Hero */}
-      <section style={{ position: 'relative', height: 480, overflow: 'hidden' }}>
-        <Image
-          src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1800&q=85"
-          alt="About NestIQ"
-          fill
-          priority
-          style={{ objectFit: 'cover', objectPosition: 'center 60%' }}
-        />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.52)' }} />
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            padding: '0 2rem',
-          }}
-        >
-          <p
-            className="eyebrow"
-            style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '0.75rem' }}
-          >
-            About Us
-          </p>
-          <h1
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              fontWeight: 700,
-              letterSpacing: '-0.025em',
-              color: '#fff',
-              lineHeight: 1.1,
-              maxWidth: 640,
-            }}
-          >
-            We&apos;re reimagining how India discovers its perfect stay
-          </h1>
-        </div>
-      </section>
-
-      {/* Mission */}
-      <section style={{ background: '#fff', padding: '6rem 3rem' }}>
-        <div
-          style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '5rem',
-            alignItems: 'center',
-          }}
-        >
-          <div>
-            <p className="eyebrow" style={{ display: 'block', marginBottom: '0.75rem' }}>
-              Our Mission
-            </p>
-            <h2
-              style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: 'clamp(1.75rem, 3.5vw, 2.75rem)',
-                fontWeight: 700,
-                letterSpacing: '-0.025em',
-                color: '#111',
-                lineHeight: 1.15,
-                marginBottom: '1.5rem',
-              }}
-            >
-              Hotel search that actually understands you
-            </h2>
+    <div className="min-h-screen" style={{ background: 'var(--surface)' }}>
+      <Navbar />
+      <div className="pt-20">
+        <section className="relative h-[70vh] flex items-end overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1600&q=80"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          <div className="relative z-10 max-w-7xl mx-auto px-6 pb-16 w-full">
             <p
-              style={{
-                fontSize: '0.9375rem',
-                color: '#555',
-                lineHeight: 1.8,
-                fontFamily: 'Inter, sans-serif',
-                marginBottom: '1rem',
-              }}
+              className="text-xs font-semibold uppercase tracking-widest mb-3"
+              style={{ color: '#f59e0b' }}
             >
-              Hotel booking in India hasn&apos;t changed in 20 years. You type a city, scroll
-              through hundreds of generic results ranked by who paid the most, and settle for
-              something that&apos;s merely available.
+              The New Era of Hospitality
             </p>
-            <p
-              style={{
-                fontSize: '0.9375rem',
-                color: '#555',
-                lineHeight: 1.8,
-                fontFamily: 'Inter, sans-serif',
-                marginBottom: '2rem',
-              }}
+            <h1
+              className="font-poppins font-black text-6xl md:text-7xl text-white"
+              style={{ letterSpacing: '-0.04em', lineHeight: 1.05 }}
             >
-              NestIQ is different. We use AI to understand what you actually want — the vibe, the
-              experience, the feeling — and match you with hotels that genuinely deliver it.
-            </p>
-            <Link
-              href="/search"
-              className="btn-dark"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
-            >
-              Start Exploring <ArrowRight size={15} />
-            </Link>
+              NestIQ is a curated
+              <br />
+              intelligence platform.
+            </h1>
           </div>
-          <div
-            style={{
-              position: 'relative',
-              borderRadius: 20,
-              overflow: 'hidden',
-              aspectRatio: '4/3',
-            }}
-            className="img-zoom"
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=900&q=85"
-              alt="NestIQ mission"
-              fill
-              style={{ objectFit: 'cover' }}
-              sizes="50vw"
-            />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Values */}
-      <section style={{ background: '#F7F6F2', padding: '6rem 3rem' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 480, margin: '0 auto 3.5rem' }}>
-            <p className="eyebrow" style={{ display: 'block', marginBottom: '0.75rem' }}>
-              What We Stand For
-            </p>
-            <h2
-              style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-                fontWeight: 700,
-                letterSpacing: '-0.025em',
-                color: '#111',
-              }}
-            >
-              Our values
-            </h2>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            {values.map((v) => (
-              <div
-                key={v.title}
-                style={{
-                  background: '#fff',
-                  borderRadius: 18,
-                  padding: '1.75rem',
-                  border: '1px solid #E8E6E1',
-                }}
-              >
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
-                    background: 'rgba(224,123,57,0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  <v.icon size={20} color="#E07B39" />
-                </div>
-                <h3
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '1rem',
-                    fontWeight: 700,
-                    color: '#111',
-                    marginBottom: '0.6rem',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {v.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: '0.85rem',
-                    color: '#666',
-                    fontFamily: 'Inter, sans-serif',
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {v.desc}
-                </p>
+        <section className="py-28" style={{ background: 'var(--surface)' }}>
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <SectionHeader
+                  label="Our Mission"
+                  title="Curation Beyond the Algorithm."
+                  subtitle="While the world moves toward mass-aggregation, we lean into intentionality. Our mission bridges AI-driven precision and human-led storytelling — every destination is more than a room, it's a narrative."
+                  className="mb-8"
+                />
+                <Link href="/search" className="btn-amber gap-2 inline-flex">
+                  Explore the Portfolio <ArrowRight size={16} />
+                </Link>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section style={{ background: '#0f0f0f', padding: '5rem 3rem' }}>
-        <div
-          style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '2rem',
-            textAlign: 'center',
-          }}
-        >
-          {[
-            { val: '25+', label: 'Curated Properties' },
-            { val: '10K+', label: 'Happy Travelers' },
-            { val: '4.8★', label: 'Average Rating' },
-            { val: '15+', label: 'Destinations' },
-          ].map((s) => (
-            <div key={s.label}>
-              <p
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '2.5rem',
-                  fontWeight: 700,
-                  color: '#fff',
-                  letterSpacing: '-0.03em',
-                  lineHeight: 1,
-                }}
-              >
-                {s.val}
-              </p>
-              <p
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'rgba(255,255,255,0.45)',
-                  fontFamily: 'Inter, sans-serif',
-                  marginTop: 8,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
-              >
-                {s.label}
-              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {STATS.map((s) => (
+                  <div key={s.label} className="card-editorial p-7 text-center">
+                    <p
+                      className="font-poppins font-black text-4xl text-on-surface mb-2"
+                      style={{ letterSpacing: '-0.03em' }}
+                    >
+                      {s.value}
+                    </p>
+                    <p className="text-xs text-primary font-medium leading-relaxed">{s.label}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Team */}
-      <section style={{ background: '#fff', padding: '6rem 3rem' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 480, margin: '0 auto 3.5rem' }}>
-            <p className="eyebrow" style={{ display: 'block', marginBottom: '0.75rem' }}>
-              The Team
-            </p>
-            <h2
-              style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-                fontWeight: 700,
-                letterSpacing: '-0.025em',
-                color: '#111',
-              }}
-            >
-              Built by travelers, for travelers
-            </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-            {team.map((t) => (
-              <div key={t.name} style={{ textAlign: 'center' }}>
-                <div
-                  style={{
-                    position: 'relative',
-                    width: 96,
-                    height: 96,
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    margin: '0 auto 1rem',
-                  }}
-                  className="img-zoom"
-                >
-                  <Image
-                    src={t.img}
-                    alt={t.name}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="96px"
-                  />
-                </div>
-                <h3
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '0.9375rem',
-                    fontWeight: 700,
-                    color: '#111',
-                    marginBottom: 4,
-                  }}
-                >
-                  {t.name}
-                </h3>
-                <p style={{ fontSize: '0.8rem', color: '#888', fontFamily: 'Inter, sans-serif' }}>
-                  {t.role}
+        </section>
+
+        <section className="py-24" style={{ background: 'var(--surface-container-low)' }}>
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="max-w-3xl">
+              <SectionHeader
+                label="Our Story"
+                title="Born from a single miserable hotel stay."
+                className="mb-6"
+              />
+              <div className="space-y-4 text-primary leading-relaxed text-sm">
+                <p>
+                  In 2019, our founder booked what was marketed as a "luxury boutique hotel" in
+                  Rajasthan. What arrived was a poorly-managed property with no soul, no service,
+                  and no story to tell. That experience planted a seed.
+                </p>
+                <p>
+                  The question wasn't "how do we find better hotels?" — it was "how do we understand
+                  what makes a stay extraordinary, and can we teach a machine to feel it?" Two years
+                  of research, 400+ property visits, and a team of passionate curators later, NestIQ
+                  was born.
                 </p>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA */}
-      <section style={{ background: '#F7F6F2', padding: '5rem 3rem' }}>
-        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
-          <h2
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
-              fontWeight: 700,
-              letterSpacing: '-0.025em',
-              color: '#111',
-              marginBottom: '1rem',
-            }}
-          >
-            Ready to find your perfect stay?
-          </h2>
-          <p
-            style={{
-              fontSize: '0.9rem',
-              color: '#777',
-              fontFamily: 'Inter, sans-serif',
-              lineHeight: 1.7,
-              marginBottom: '2rem',
-            }}
-          >
-            Join thousands of travelers who&apos;ve discovered extraordinary stays across India with
-            NestIQ.
-          </p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link
-              href="/search"
-              className="btn-dark"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
-            >
-              Explore Hotels <ArrowRight size={15} />
-            </Link>
-            <Link
-              href="/concierge"
-              className="btn-outline-dark"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
-            >
-              <Sparkles size={14} /> AI Concierge
+        <section className="py-28" style={{ background: 'var(--surface)' }}>
+          <div className="max-w-7xl mx-auto px-6">
+            <SectionHeader
+              label="Our Values"
+              title="The principles we refuse to compromise."
+              className="mb-12"
+            />
+            <div className="grid md:grid-cols-3 gap-6">
+              {VALUES.map((v, i) => (
+                <div
+                  key={v.title}
+                  className={`card-editorial p-8 ${i === 1 ? 'border-l-4 border-secondary' : ''}`}
+                >
+                  <span
+                    className="font-poppins font-black text-5xl mb-4 block"
+                    style={{ color: 'var(--surface-container)' }}
+                  >
+                    0{i + 1}
+                  </span>
+                  <h3 className="font-poppins font-bold text-lg text-on-surface mb-3">{v.title}</h3>
+                  <p className="text-sm text-primary leading-relaxed">{v.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24" style={{ background: 'var(--surface-container-low)' }}>
+          <div className="max-w-7xl mx-auto px-6">
+            <SectionHeader
+              label="The Curators"
+              title="Humans behind the intelligence."
+              className="mb-12"
+            />
+            <div className="grid md:grid-cols-3 gap-8">
+              {TEAM.map((member) => (
+                <div
+                  key={member.name}
+                  className="card-editorial p-6 flex flex-col items-center text-center"
+                >
+                  <img
+                    src={member.img}
+                    alt={member.name}
+                    className="w-20 h-20 rounded-full object-cover mb-4"
+                  />
+                  <h4 className="font-poppins font-bold text-on-surface">{member.name}</h4>
+                  <p className="text-xs text-primary mt-1">{member.role}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-28" style={{ background: '#0f0f0f' }}>
+          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div>
+              <p
+                className="text-xs font-semibold uppercase tracking-widest mb-3"
+                style={{ color: '#f59e0b' }}
+              >
+                Global Presence
+              </p>
+              <h2
+                className="font-poppins font-black text-4xl text-white mb-4"
+                style={{ letterSpacing: '-0.03em' }}
+              >
+                Curating the world,
+                <br />
+                one sanctuary at a time.
+              </h2>
+              <div className="flex flex-wrap gap-4 mt-6">
+                {['London · Mayfair', 'Kyoto · Gion', 'Mumbai · Bandra', 'New York · SoHo'].map(
+                  (loc) => (
+                    <div key={loc} className="flex items-center gap-2 text-sm text-white/60">
+                      <MapPin size={13} style={{ color: '#f59e0b' }} /> {loc}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+            <Link href="/contact" className="btn-amber flex-shrink-0">
+              Connect with Us <ArrowRight size={16} />
             </Link>
           </div>
-        </div>
-      </section>
-
+        </section>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 }

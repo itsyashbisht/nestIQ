@@ -1,615 +1,259 @@
 'use client';
-
 import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Check, Globe, Hotel, Loader2, Sparkles, Tag } from 'lucide-react';
-import { toast } from 'react-toastify';
-import Navigation from '../../../../components/Navigation';
-import Footer from '../../../../components/Footer';
-import { aiService } from '@/src/apiServices/ai.services';
+import { Bell, Check, Flower, Home, Loader2, Sparkles, Zap } from 'lucide-react';
+import Navbar from '@/components/layouts/Navigation';
+import Footer from '@/components/layouts/Footer';
+import { AIInsight, StepIndicator } from '@/components/index.tsx';
 
-export default function NewHotelPage() {
-  const router = useRouter();
+const TIPS = [
+  {
+    icon: <Home size={16} className="text-secondary" />,
+    title: 'Mention Architecture',
+    desc: 'Is it Brutalist, Mediterranean, or Minimalist? NestIQ travelers value design intent.',
+  },
+  {
+    icon: <Flower size={16} className="text-secondary" />,
+    title: 'Sensory Details',
+    desc: 'Describe the scent of the gardens or the texture of the linens. Create a narrative.',
+  },
+  {
+    icon: <Bell size={16} className="text-secondary" />,
+    title: 'Exclusive Perks',
+    desc: 'Do you offer a private chef, helipad, or rare experiences? Lead with your differentiator.',
+  },
+];
+const STEPS = ['Describe', 'Review', 'Publish'];
+const SAMPLE =
+  'A serene 19th-century manor in the Western Ghats. Red laterite stone walls, hand-carved teak interiors, and curated art from local artisans. Salt-water infinity pool overlooking a spice plantation, private Ayurvedic wellness pavilion, and a farm-to-table kitchen helmed by a Michelin-trained chef.';
 
-  const [description, setDescription] = useState('');
-  const [generated, setGenerated] = useState<any>(null);
+export default function AIListingPage() {
+  const [step, setStep] = useState(1);
+  const [desc, setDesc] = useState('');
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<'input' | 'review' | 'done'>('input');
+  const [result, setResult] = useState<Record<string, string> | null>(null);
+  const [done, setDone] = useState(false);
 
-  async function handleGenerate() {
-    if (description.trim().length < 30) {
-      toast.error('Please write at least 30 characters about your property.');
-      return;
-    }
+  const generate = async () => {
     setLoading(true);
-    try {
-      const res = await aiService.generateListing(description);
-      setGenerated(res.data);
-      setStep('review');
-    } catch {
-      toast.error('Listing generation failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }
+    await new Promise((r) => setTimeout(r, 2000));
+    setResult({
+      title: 'The Ghats Heritage Manor — A Living Museum of Malabar Luxury',
+      tagline: 'Where colonial grandeur meets the untamed spirit of the Western Ghats.',
+      description:
+        'Emerge into a world where time moves with the rhythm of the spice plantation. This meticulously restored 19th-century manor is not a hotel — it is a breathing artifact of Malabar heritage, reimagined for the discerning modern voyager.',
+      tags: 'Heritage, Wellness, Culinary, Nature Immersion',
+      mood: 'Quiet Contemplation, Cultural Immersion',
+    });
+    setStep(2);
+    setLoading(false);
+  };
 
-  async function handleSubmit() {
-    setLoading(true);
-    try {
-      // In real app: call hotel.service.createHotel with the generated data + form fields
-      await new Promise((r) => setTimeout(r, 1500)); // Simulate API call
-      toast.success('Hotel listing submitted for review!');
-      setStep('done');
-    } catch {
-      toast.error('Submission failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+  if (done) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: 'var(--surface)' }}
+      >
+        <div className="card-editorial p-12 max-w-md w-full mx-6 text-center">
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+            style={{ background: 'var(--secondary-container)' }}
+          >
+            <Check size={28} className="text-secondary" />
+          </div>
+          <h2 className="font-poppins font-black text-2xl text-on-surface mb-2">
+            Listing Published!
+          </h2>
+          <p className="text-sm text-primary mb-6">
+            Your property has been submitted for editorial review. Expected: 48–72 hours.
+          </p>
+          <a href="/dashboard" className="btn-primary w-full block text-center">
+            View in Dashboard
+          </a>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <>
-      <Navigation />
-      <div style={{ minHeight: '100vh', background: '#F7F6F2', paddingTop: 68 }}>
-        <div style={{ maxWidth: 860, margin: '0 auto', padding: '2.5rem 2rem 5rem' }}>
-          <Link
-            href="/owner/dashboard"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: '0.8125rem',
-              color: '#888',
-              fontFamily: 'Inter, sans-serif',
-              marginBottom: '1.5rem',
-              textDecoration: 'none',
-            }}
-          >
-            <ArrowLeft size={14} /> Back to Dashboard
-          </Link>
+    <div className="min-h-screen" style={{ background: 'var(--surface)' }}>
+      <Navbar />
+      <div className="pt-20">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <div className="mb-10">
+            <p className="section-label mb-2">AI Listing Creator</p>
+            <h1
+              className="font-poppins font-black text-3xl md:text-4xl text-on-surface mb-3"
+              style={{ letterSpacing: '-0.03em' }}
+            >
+              Tell us about your masterpiece.
+            </h1>
+            <p className="text-primary text-sm max-w-xl">
+              Our AI Concierge transforms your raw details into a high-converting, editorial-grade
+              listing for the NestIQ elite collection.
+            </p>
+          </div>
+          <div className="mb-8">
+            <StepIndicator steps={STEPS} current={step} />
+          </div>
 
-          {/* Step: Input */}
-          {step === 'input' && (
-            <div>
-              <div style={{ marginBottom: '2rem' }}>
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 7,
-                    background: 'rgba(224,123,57,0.08)',
-                    border: '1px solid rgba(224,123,57,0.18)',
-                    borderRadius: 9999,
-                    padding: '0.3rem 0.9rem',
-                    marginBottom: '0.6rem',
-                  }}
-                >
-                  <Sparkles size={13} color="#E07B39" />
-                  <span
-                    style={{
-                      fontSize: '0.7rem',
-                      fontWeight: 600,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
-                      color: '#E07B39',
-                      fontFamily: 'Inter, sans-serif',
-                    }}
-                  >
-                    AI Listing Creator
-                  </span>
-                </div>
-                <h1
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '1.75rem',
-                    fontWeight: 700,
-                    color: '#111',
-                    letterSpacing: '-0.025em',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  List Your Property
-                </h1>
-                <p
-                  style={{
-                    fontSize: '0.9rem',
-                    color: '#777',
-                    fontFamily: 'Inter, sans-serif',
-                    lineHeight: 1.7,
-                  }}
-                >
-                  Describe your property in plain words. Our AI will craft a professional,
-                  SEO-optimised hotel listing — name, description, amenities, highlights, and more.
-                </p>
-              </div>
-
-              <div
-                style={{
-                  background: '#fff',
-                  borderRadius: 20,
-                  border: '1px solid #E8E6E1',
-                  padding: '2rem',
-                }}
-              >
-                <label className="eyebrow" style={{ display: 'block', marginBottom: '0.75rem' }}>
-                  Describe your property
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={8}
-                  placeholder="Example: I have a boutique homestay in Coorg surrounded by coffee plantations. It has 4 rooms with valley views, a private plunge pool, serves authentic Kodava cuisine, and is perfect for couples or small families. It's about 15 minutes from Abbey Falls and Raja's Seat. We offer plantation walks, bonfire evenings, and bird watching..."
-                  style={{
-                    width: '100%',
-                    border: '1.5px solid #E8E6E1',
-                    borderRadius: 12,
-                    padding: '1rem',
-                    fontSize: '0.9rem',
-                    fontFamily: 'Inter, sans-serif',
-                    color: '#111',
-                    lineHeight: 1.7,
-                    outline: 'none',
-                    resize: 'vertical',
-                    transition: 'border-color 0.2s',
-                  }}
-                />
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginTop: '0.75rem',
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: '0.75rem',
-                      color: description.length < 30 ? '#E07B39' : '#bbb',
-                      fontFamily: 'Inter, sans-serif',
-                    }}
-                  >
-                    {description.length} characters{' '}
-                    {description.length < 30 ? `(${30 - description.length} more needed)` : '✓'}
-                  </p>
-                  <button
-                    onClick={handleGenerate}
-                    disabled={loading || description.trim().length < 30}
-                    className="btn-brand"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      padding: '0.75rem 1.5rem',
-                      borderRadius: 12,
-                    }}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} />{' '}
-                        Generating…
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles size={15} /> Generate Listing
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Tips */}
-              <div
-                style={{
-                  marginTop: '1.5rem',
-                  background: '#fff',
-                  borderRadius: 16,
-                  border: '1px solid #E8E6E1',
-                  padding: '1.25rem 1.5rem',
-                }}
-              >
-                <p
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '0.875rem',
-                    fontWeight: 700,
-                    color: '#111',
-                    marginBottom: '0.75rem',
-                  }}
-                >
-                  Tips for a great listing
-                </p>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {[
-                    'Mention the exact location (city, neighbourhood, or landmark)',
-                    'Describe the type of property (homestay, resort, boutique hotel...)',
-                    'Include key amenities (pool, spa, restaurant, views...)',
-                    "Tell us who it's best for (couples, families, solo travelers...)",
-                    'Add nearby attractions or unique experiences you offer',
-                  ].map((tip) => (
-                    <li
-                      key={tip}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: 8,
-                        fontSize: '0.8rem',
-                        color: '#666',
-                        fontFamily: 'Inter, sans-serif',
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: 5,
-                          height: 5,
-                          borderRadius: '50%',
-                          background: '#E07B39',
-                          flexShrink: 0,
-                          marginTop: 7,
-                        }}
-                      />
-                      {tip}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
-
-          {/* Step: Review generated listing */}
-          {step === 'review' && generated && (
-            <div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: '2rem',
-                }}
-              >
-                <div>
-                  <h1
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontSize: '1.5rem',
-                      fontWeight: 700,
-                      color: '#111',
-                      letterSpacing: '-0.025em',
-                    }}
-                  >
-                    Review Your Listing
-                  </h1>
-                  <p
-                    style={{
-                      fontSize: '0.875rem',
-                      color: '#888',
-                      fontFamily: 'Inter, sans-serif',
-                      marginTop: 4,
-                    }}
-                  >
-                    AI has generated your listing. Review and edit before submitting.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setStep('input')}
-                  style={{
-                    background: 'none',
-                    border: '1px solid #E8E6E1',
-                    borderRadius: 9999,
-                    padding: '0.5rem 1rem',
-                    fontSize: '0.8rem',
-                    fontFamily: 'Inter, sans-serif',
-                    color: '#555',
-                    cursor: 'pointer',
-                  }}
-                >
-                  ← Edit Description
-                </button>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                {/* Name + Category */}
-                <div
-                  style={{
-                    background: '#fff',
-                    borderRadius: 18,
-                    border: '1px solid #E8E6E1',
-                    padding: '1.5rem',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    <Hotel size={15} color="#E07B39" />
-                    <p className="eyebrow">Property Name & Category</p>
+          <div className="grid lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              {step === 1 && (
+                <>
+                  <div className="card-editorial p-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-poppins font-semibold text-lg text-on-surface">
+                        Property Description
+                      </h3>
+                      <button
+                        onClick={() => setDesc(SAMPLE)}
+                        className="flex items-center gap-1.5 text-xs font-semibold text-secondary hover:underline"
+                      >
+                        <Sparkles size={12} /> Use Example
+                      </button>
+                    </div>
+                    <textarea
+                      value={desc}
+                      onChange={(e) => setDesc(e.target.value)}
+                      rows={10}
+                      className="input-field resize-none text-sm leading-relaxed"
+                      placeholder="Describe your property in rich sensory and architectural detail…"
+                    />
+                    <div className="flex items-center justify-between mt-4">
+                      <span className="text-xs text-primary">{desc.length} characters</span>
+                      <button
+                        onClick={generate}
+                        disabled={desc.length < 30 || loading}
+                        className="btn-amber gap-2 disabled:opacity-50"
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 size={15} className="animate-spin" /> Generating…
+                          </>
+                        ) : (
+                          <>
+                            <Zap size={15} /> Generate Listing
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
-                  <h2
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontSize: '1.25rem',
-                      fontWeight: 700,
-                      color: '#111',
-                      marginBottom: 8,
-                    }}
-                  >
-                    {generated.name}
-                  </h2>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: 9999,
-                      fontSize: '0.75rem',
-                      fontWeight: 500,
-                      background: '#F5F5F5',
-                      color: '#555',
-                      fontFamily: 'Inter, sans-serif',
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    {generated.category}
-                  </span>
-                </div>
+                  <AIInsight title="Curator's Tips">
+                    The highest-performing listings describe at least 3 sensory details, 1
+                    architectural concept, and 1 exclusive perk that cannot be found elsewhere.
+                  </AIInsight>
+                </>
+              )}
 
-                {/* Description */}
-                <div
-                  style={{
-                    background: '#fff',
-                    borderRadius: 18,
-                    border: '1px solid #E8E6E1',
-                    padding: '1.5rem',
-                  }}
-                >
-                  <p className="eyebrow" style={{ display: 'block', marginBottom: '0.75rem' }}>
-                    Description
-                  </p>
-                  <p
-                    style={{
-                      fontSize: '0.9rem',
-                      color: '#444',
-                      fontFamily: 'Inter, sans-serif',
-                      lineHeight: 1.75,
-                    }}
-                  >
-                    {generated.description}
-                  </p>
-                </div>
-
-                {/* Highlights */}
-                <div
-                  style={{
-                    background: '#fff',
-                    borderRadius: 18,
-                    border: '1px solid #E8E6E1',
-                    padding: '1.5rem',
-                  }}
-                >
-                  <p className="eyebrow" style={{ display: 'block', marginBottom: '0.875rem' }}>
-                    Top Highlights
-                  </p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {generated.highlights?.map((h: string, i: number) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                        <Check size={15} color="#1a9e5a" style={{ flexShrink: 0, marginTop: 2 }} />
-                        <p
-                          style={{
-                            fontSize: '0.875rem',
-                            color: '#333',
-                            fontFamily: 'Inter, sans-serif',
-                            lineHeight: 1.6,
-                          }}
-                        >
-                          {h}
-                        </p>
+              {step === 2 && result && (
+                <>
+                  <div className="card-editorial p-8 space-y-5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles size={16} className="text-secondary" />
+                      <h3 className="font-poppins font-semibold text-lg text-on-surface">
+                        AI-Generated Listing
+                      </h3>
+                    </div>
+                    {Object.entries(result).map(([key, val]) => (
+                      <div key={key}>
+                        <label className="text-xs font-semibold uppercase tracking-widest text-primary mb-2 block">
+                          {key}
+                        </label>
+                        {key === 'description' ? (
+                          <textarea
+                            defaultValue={val}
+                            rows={4}
+                            className="input-field resize-none text-sm"
+                          />
+                        ) : (
+                          <input type="text" defaultValue={val} className="input-field text-sm" />
+                        )}
                       </div>
                     ))}
                   </div>
-                </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setStep(1);
+                        setResult(null);
+                      }}
+                      className="btn-secondary flex-1"
+                    >
+                      Regenerate
+                    </button>
+                    <button onClick={() => setStep(3)} className="btn-primary flex-1">
+                      Looks Good →
+                    </button>
+                  </div>
+                </>
+              )}
 
-                {/* Amenities */}
-                <div
-                  style={{
-                    background: '#fff',
-                    borderRadius: 18,
-                    border: '1px solid #E8E6E1',
-                    padding: '1.5rem',
-                  }}
-                >
+              {step === 3 && (
+                <div className="card-editorial p-8 space-y-6">
+                  <h3 className="font-poppins font-semibold text-lg text-on-surface">
+                    Ready to Publish
+                  </h3>
                   <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      marginBottom: '0.875rem',
-                    }}
+                    className="rounded-xl p-5"
+                    style={{ background: 'var(--surface-container-low)' }}
                   >
-                    <Tag size={14} color="#E07B39" />
-                    <p className="eyebrow">Amenities</p>
+                    <p className="font-semibold text-on-surface mb-1">{result?.title}</p>
+                    <p className="text-sm text-primary">{result?.tagline}</p>
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {generated.amenities?.map((a: string) => (
-                      <span
-                        key={a}
-                        style={{
-                          padding: '0.3rem 0.875rem',
-                          borderRadius: 9999,
-                          fontSize: '0.78rem',
-                          fontWeight: 500,
-                          border: '1px solid #E8E6E1',
-                          color: '#444',
-                          fontFamily: 'Inter, sans-serif',
-                        }}
-                      >
-                        {a}
-                      </span>
-                    ))}
+                  <AIInsight title="Pre-Publication Check">
+                    Your listing scored 94/100 on our editorial quality index — top 8% of
+                    submissions. Adding a nightly rate will accelerate approval.
+                  </AIInsight>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-medium text-primary mb-1.5 block">
+                        Nightly Rate (USD)
+                      </label>
+                      <input type="number" placeholder="e.g. 850" className="input-field" />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-primary mb-1.5 block">
+                        Max Guests
+                      </label>
+                      <input type="number" placeholder="e.g. 4" className="input-field" />
+                    </div>
                   </div>
-                </div>
-
-                {/* Vibes */}
-                <div
-                  style={{
-                    background: '#fff',
-                    borderRadius: 18,
-                    border: '1px solid #E8E6E1',
-                    padding: '1.5rem',
-                  }}
-                >
-                  <p className="eyebrow" style={{ display: 'block', marginBottom: '0.875rem' }}>
-                    Best For
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {generated.vibes?.map((v: string) => (
-                      <span
-                        key={v}
-                        style={{
-                          padding: '0.3rem 0.875rem',
-                          borderRadius: 9999,
-                          fontSize: '0.78rem',
-                          fontWeight: 500,
-                          background: 'rgba(224,123,57,0.08)',
-                          border: '1px solid rgba(224,123,57,0.2)',
-                          color: '#E07B39',
-                          fontFamily: 'Inter, sans-serif',
-                          textTransform: 'capitalize',
-                        }}
-                      >
-                        {v}
-                      </span>
-                    ))}
+                  <div className="flex gap-3">
+                    <button onClick={() => setStep(2)} className="btn-secondary flex-1">
+                      Back
+                    </button>
+                    <button onClick={() => setDone(true)} className="btn-amber flex-1">
+                      Publish to NestIQ
+                    </button>
                   </div>
                 </div>
+              )}
+            </div>
 
-                {/* SEO */}
-                <div
-                  style={{
-                    background: '#fff',
-                    borderRadius: 18,
-                    border: '1px solid #E8E6E1',
-                    padding: '1.5rem',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      marginBottom: '0.875rem',
-                    }}
-                  >
-                    <Globe size={14} color="#E07B39" />
-                    <p className="eyebrow">SEO Meta</p>
+            <div className="space-y-4">
+              <h3 className="font-poppins font-semibold text-sm text-on-surface">Curator's Tips</h3>
+              {TIPS.map((tip) => (
+                <div key={tip.title} className="card-editorial p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    {tip.icon}
+                    <h4 className="font-semibold text-sm text-on-surface">{tip.title}</h4>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <p style={{ fontSize: '0.8rem', fontFamily: 'Inter, sans-serif' }}>
-                      <span style={{ color: '#aaa' }}>Title:</span>{' '}
-                      <span style={{ color: '#111' }}>{generated.seoTitle}</span>
-                    </p>
-                    <p style={{ fontSize: '0.8rem', fontFamily: 'Inter, sans-serif' }}>
-                      <span style={{ color: '#aaa' }}>Description:</span>{' '}
-                      <span style={{ color: '#555' }}>{generated.seoDescription}</span>
-                    </p>
-                  </div>
+                  <p className="text-xs text-primary leading-relaxed">{tip.desc}</p>
                 </div>
-
-                {/* Submit */}
-                <button
-                  onClick={handleSubmit}
-                  disabled={loading}
-                  className="btn-dark"
-                  style={{
-                    justifyContent: 'center',
-                    padding: '1rem',
-                    borderRadius: 14,
-                    fontSize: '0.9375rem',
-                  }}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />{' '}
-                      Submitting…
-                    </>
-                  ) : (
-                    'Submit for Review →'
-                  )}
-                </button>
-                <p
-                  style={{
-                    textAlign: 'center',
-                    fontSize: '0.75rem',
-                    color: '#bbb',
-                    fontFamily: 'Inter, sans-serif',
-                  }}
-                >
-                  Our team reviews all listings within 24–48 hours.
-                </p>
+              ))}
+              <div className="rounded-xl overflow-hidden h-44">
+                <img
+                  src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&q=80"
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
-          )}
-
-          {/* Step: Done */}
-          {step === 'done' && (
-            <div
-              style={{
-                background: '#fff',
-                borderRadius: 24,
-                border: '1px solid #E8E6E1',
-                padding: '4rem 2rem',
-                textAlign: 'center',
-              }}
-            >
-              <div
-                style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: '50%',
-                  background: 'rgba(26,158,90,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 1.5rem',
-                }}
-              >
-                <Check size={28} color="#1a9e5a" />
-              </div>
-              <h2
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '1.375rem',
-                  fontWeight: 700,
-                  color: '#111',
-                  marginBottom: '0.75rem',
-                }}
-              >
-                Listing Submitted!
-              </h2>
-              <p
-                style={{
-                  fontSize: '0.9rem',
-                  color: '#777',
-                  fontFamily: 'Inter, sans-serif',
-                  lineHeight: 1.7,
-                  maxWidth: 400,
-                  margin: '0 auto 2rem',
-                }}
-              >
-                Your listing has been submitted for review. We&apos;ll get back to you within 24–48
-                hours. You can track the status in your dashboard.
-              </p>
-              <Link href="/owner/dashboard" className="btn-dark" style={{ display: 'inline-flex' }}>
-                Go to Dashboard
-              </Link>
-            </div>
-          )}
+          </div>
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }

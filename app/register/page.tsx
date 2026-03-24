@@ -185,7 +185,8 @@ export default function RegisterPage() {
     fontFamily: 'Inter, sans-serif',
     color: C.text,
     outline: 'none',
-    transition: 'border-color 0.2s, background 0.2s',
+    boxShadow: focused === name ? '0 0 0 3px rgba(26,26,26,0.06)' : 'none',
+    transition: 'border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
   });
 
   const labelSx: React.CSSProperties = {
@@ -531,7 +532,7 @@ export default function RegisterPage() {
                   style={{
                     height: '100%',
                     width: `${(step / (STEPS.length - 1)) * 100}%`,
-                    background: C.text,
+                    background: 'linear-gradient(90deg, #1A1A1A 0%, #E07B39 100%)',
                     borderRadius: 9999,
                     transition: 'width 0.4s cubic-bezier(0.16,1,0.3,1)',
                   }}

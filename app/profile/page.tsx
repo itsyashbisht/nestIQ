@@ -1,405 +1,277 @@
 'use client';
+import { useState } from 'react';
+import { Check, ChevronRight, Edit2, Mail, MapPin, Shield, Sparkles, User } from 'lucide-react';
+import Navbar from '@/components/layouts/Navigation';
+import Footer from '@/components/layouts/Footer';
+import { AIInsight, Badge } from '@/components/index.tsx';
+import { MOCK_USER } from '@/src/lib/data';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { Check, Loader2, Lock, Mail, MapPin, Phone, User } from 'lucide-react';
-import Navigation from '../../components/Navigation';
-import Footer from '../../components/Footer';
-import { updateUserDetails } from '@/src/thunks/user.thunk';
-import { changePassword } from '@/src/thunks/auth.thunk';
-import type { AppDispatch, RootState } from '@/src/store';
-
-type Tab = 'profile' | 'security';
+const NAV_ITEMS = [
+  { label: 'Profile Details', key: 'profile' },
+  { label: 'Security & Access', key: 'security' },
+  { label: 'Preferences', key: 'preferences' },
+  { label: 'Notifications', key: 'notifications' },
+];
 
 export default function ProfilePage() {
-  const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { user, isAuthenticated, loading } = useSelector((s: RootState) => s.auth);
-  const [tab, setTab] = useState<Tab>('profile');
-  const [saved, setSaved] = useState(false);
-
+  const [activeSection, setActiveSection] = useState('profile');
+  const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
-    fullname: '',
-    username: '',
-    email: '',
-    phoneNumber: '',
-    address: '',
-    city: '',
-    state: '',
-    pincode: '',
+    firstName: MOCK_USER.name.split(' ')[0],
+    lastName: MOCK_USER.name.split(' ')[1] || '',
+    email: MOCK_USER.email,
+    bio: MOCK_USER.bio,
+    city: 'London',
+    address: '42 Curzon Street',
   });
-  const [pwForm, setPwForm] = useState({ curPassword: '', newPassword: '', confirmPassword: '' });
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace('/login');
-      return;
-    }
-    if (user) {
-      setForm({
-        fullname: user.fullname ?? '',
-        username: user.username ?? '',
-        email: user.email ?? '',
-        phoneNumber: String(user.phoneNumber ?? ''),
-        address: user.address ?? '',
-        city: user.city ?? '',
-        state: user.state ?? '',
-        pincode: String(user.pincode ?? ''),
-      });
-    }
-  }, [user, isAuthenticated]);
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
-  }
-
-  async function handleSaveProfile(e: React.FormEvent) {
-    e.preventDefault();
-    const res = await dispatch(
-      updateUserDetails({
-        ...form,
-        phoneNumber: Number(form.phoneNumber),
-        pincode: Number(form.pincode),
-      })
-    );
-    if (updateUserDetails.fulfilled.match(res)) {
-      toast.success('Profile updated!');
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2500);
-    } else {
-      toast.error((res.payload as string) ?? 'Update failed');
-    }
-  }
-
-  async function handleChangePassword(e: React.FormEvent) {
-    e.preventDefault();
-    if (pwForm.newPassword !== pwForm.confirmPassword) {
-      toast.error("Passwords don't match");
-      return;
-    }
-    const res = await dispatch(
-      changePassword({ curPassword: pwForm.curPassword, newPassword: pwForm.newPassword })
-    );
-    if (changePassword.fulfilled.match(res)) {
-      toast.success('Password changed!');
-      setPwForm({ curPassword: '', newPassword: '', confirmPassword: '' });
-    } else {
-      toast.error((res.payload as string) ?? 'Password change failed');
-    }
-  }
-
-  const inputStyle = {
-    width: '100%',
-    border: '1.5px solid #E8E6E1',
-    borderRadius: 10,
-    padding: '0.65rem 0.875rem',
-    fontSize: '0.875rem',
-    outline: 'none',
-    fontFamily: 'Inter, sans-serif',
-    color: '#111',
-    background: '#fff',
-    transition: 'border-color 0.2s',
-  };
+  const handleField = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
   return (
-    <>
-      <Navigation />
-      <div style={{ minHeight: '100vh', background: '#F7F6F2', paddingTop: 68 }}>
-        <div style={{ maxWidth: 760, margin: '0 auto', padding: '2.5rem 2rem 5rem' }}>
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: '50%',
-                background: '#111',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '1.25rem',
-                  fontWeight: 700,
-                  color: '#fff',
-                }}
-              >
-                {user?.fullname?.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div>
-              <h1
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '1.25rem',
-                  fontWeight: 700,
-                  color: '#111',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                {user?.fullname}
-              </h1>
-              <p style={{ fontSize: '0.8rem', color: '#888', fontFamily: 'Inter, sans-serif' }}>
-                {user?.role === 'ADMIN' ? '🔑 Admin' : 'Member'} · {user?.email}
-              </p>
-            </div>
-          </div>
-
-          {/* Tabs */}
-          <div
-            style={{
-              display: 'flex',
-              gap: 4,
-              marginBottom: '1.5rem',
-              background: '#fff',
-              borderRadius: 12,
-              padding: 4,
-              border: '1px solid #E8E6E1',
-              width: 'fit-content',
-            }}
-          >
-            {(['profile', 'security'] as Tab[]).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                style={{
-                  padding: '0.5rem 1.25rem',
-                  borderRadius: 9,
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontFamily: 'Inter, sans-serif',
-                  fontSize: '0.8375rem',
-                  fontWeight: 500,
-                  textTransform: 'capitalize',
-                  transition: 'all 0.2s',
-                  background: tab === t ? '#111' : 'transparent',
-                  color: tab === t ? '#fff' : '#888',
-                }}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-
-          {/* Profile tab */}
-          {tab === 'profile' && (
-            <div
-              style={{
-                background: '#fff',
-                borderRadius: 20,
-                border: '1px solid #E8E6E1',
-                padding: '2rem',
-              }}
-            >
-              <h2
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  color: '#111',
-                  marginBottom: '1.5rem',
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                Personal Information
-              </h2>
-              <form onSubmit={handleSaveProfile}>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '1rem',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  {[
-                    {
-                      name: 'fullname',
-                      label: 'Full Name',
-                      icon: <User size={14} />,
-                      placeholder: 'Your full name',
-                    },
-                    {
-                      name: 'username',
-                      label: 'Username',
-                      icon: <User size={14} />,
-                      placeholder: 'your_username',
-                    },
-                    {
-                      name: 'email',
-                      label: 'Email',
-                      icon: <Mail size={14} />,
-                      placeholder: 'you@email.com',
-                    },
-                    {
-                      name: 'phoneNumber',
-                      label: 'Phone',
-                      icon: <Phone size={14} />,
-                      placeholder: '9876543210',
-                    },
-                    {
-                      name: 'address',
-                      label: 'Address',
-                      icon: <MapPin size={14} />,
-                      placeholder: '123, MG Road',
-                    },
-                    {
-                      name: 'city',
-                      label: 'City',
-                      icon: <MapPin size={14} />,
-                      placeholder: 'Bangalore',
-                    },
-                    {
-                      name: 'state',
-                      label: 'State',
-                      icon: <MapPin size={14} />,
-                      placeholder: 'Karnataka',
-                    },
-                    {
-                      name: 'pincode',
-                      label: 'Pincode',
-                      icon: <MapPin size={14} />,
-                      placeholder: '560001',
-                    },
-                  ].map((f) => (
-                    <div key={f.name}>
-                      <label
-                        className="eyebrow"
-                        style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6 }}
-                      >
-                        <span style={{ color: '#aaa' }}>{f.icon}</span>
-                        {f.label}
-                      </label>
-                      <input
-                        name={f.name}
-                        value={form[f.name as keyof typeof form]}
-                        onChange={handleChange}
-                        placeholder={f.placeholder}
-                        style={inputStyle}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    background: saved ? '#1a9e5a' : '#111',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: 12,
-                    padding: '0.75rem 1.75rem',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    fontFamily: 'Inter, sans-serif',
-                    cursor: 'pointer',
-                    transition: 'background 0.3s',
-                  }}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} /> Saving…
-                    </>
-                  ) : saved ? (
-                    <>
-                      <Check size={15} /> Saved!
-                    </>
-                  ) : (
-                    'Save Changes'
-                  )}
-                </button>
-              </form>
-            </div>
-          )}
-
-          {/* Security tab */}
-          {tab === 'security' && (
-            <div
-              style={{
-                background: '#fff',
-                borderRadius: 20,
-                border: '1px solid #E8E6E1',
-                padding: '2rem',
-              }}
-            >
-              <h2
-                style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  color: '#111',
-                  marginBottom: '1.5rem',
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                Change Password
-              </h2>
-              <form
-                onSubmit={handleChangePassword}
-                style={{ maxWidth: 400, display: 'flex', flexDirection: 'column', gap: '1rem' }}
-              >
-                {[
-                  { name: 'curPassword', label: 'Current Password', placeholder: '••••••••' },
-                  { name: 'newPassword', label: 'New Password', placeholder: 'Min 8 characters' },
-                  {
-                    name: 'confirmPassword',
-                    label: 'Confirm Password',
-                    placeholder: 'Re-enter new password',
-                  },
-                ].map((f) => (
-                  <div key={f.name}>
-                    <label
-                      className="eyebrow"
-                      style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6 }}
-                    >
-                      <Lock size={13} color="#aaa" />
-                      {f.label}
-                    </label>
-                    <input
-                      type="password"
-                      value={pwForm[f.name as keyof typeof pwForm]}
-                      onChange={(e) => setPwForm((p) => ({ ...p, [f.name]: e.target.value }))}
-                      placeholder={f.placeholder}
-                      style={inputStyle}
-                    />
+    <div className="min-h-screen" style={{ background: 'var(--surface)' }}>
+      <Navbar />
+      <div className="pt-20">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <div className="grid lg:grid-cols-4 gap-8">
+            {/* Sidebar */}
+            <aside className="lg:col-span-1 space-y-5">
+              {/* Avatar card */}
+              <div className="card-editorial p-6 text-center">
+                <div className="relative inline-block mb-4">
+                  <div
+                    className="w-20 h-20 rounded-full flex items-center justify-center font-poppins font-black text-2xl text-white mx-auto"
+                    style={{ background: 'linear-gradient(145deg, #9b4701, #b85200)' }}
+                  >
+                    {form.firstName[0]}
+                    {form.lastName[0]}
                   </div>
+                  <button className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center border border-surface-container">
+                    <Edit2 size={12} className="text-on-surface" />
+                  </button>
+                </div>
+                <h3 className="font-poppins font-bold text-on-surface">
+                  {form.firstName} {form.lastName}
+                </h3>
+                <div className="flex items-center justify-center gap-1.5 mt-1 mb-3">
+                  <Badge variant="amber">{MOCK_USER.tier} Tier</Badge>
+                </div>
+                <p className="text-xs text-primary">Member since {MOCK_USER.memberSince}</p>
+                <div className="flex items-center justify-center gap-1 mt-2">
+                  <Check size={12} className="text-green-600" />
+                  <span className="text-xs text-green-600 font-medium">Verified Identity</span>
+                </div>
+              </div>
+
+              {/* Nav */}
+              <div className="card-editorial overflow-hidden">
+                {NAV_ITEMS.map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => setActiveSection(item.key)}
+                    className={`w-full flex items-center justify-between px-5 py-4 text-sm text-left transition-colors border-b border-surface-container last:border-0 ${
+                      activeSection === item.key
+                        ? 'font-semibold text-on-surface bg-surface-container-low'
+                        : 'text-primary hover:bg-surface-container-low'
+                    }`}
+                  >
+                    {item.label}
+                    <ChevronRight
+                      size={14}
+                      className={activeSection === item.key ? 'text-secondary' : 'text-primary'}
+                    />
+                  </button>
                 ))}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn-dark"
-                  style={{
-                    justifyContent: 'center',
-                    padding: '0.75rem',
-                    borderRadius: 12,
-                    marginTop: 4,
-                  }}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} />{' '}
-                      Updating…
-                    </>
-                  ) : (
-                    'Update Password'
-                  )}
-                </button>
-              </form>
+              </div>
+            </aside>
+
+            {/* Main */}
+            <div className="lg:col-span-3 space-y-6">
+              {activeSection === 'profile' && (
+                <>
+                  <div className="card-editorial p-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="font-poppins font-bold text-xl text-on-surface">
+                        Personal Information
+                      </h2>
+                      <button
+                        onClick={() => setEditing(!editing)}
+                        className="btn-secondary text-xs px-4 py-2 gap-1.5"
+                      >
+                        {editing ? (
+                          <>
+                            <Check size={12} /> Done
+                          </>
+                        ) : (
+                          <>
+                            <Edit2 size={12} /> Edit
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      {[
+                        { label: 'First Name', key: 'firstName', icon: <User size={14} /> },
+                        { label: 'Last Name', key: 'lastName', icon: <User size={14} /> },
+                        {
+                          label: 'Email Address',
+                          key: 'email',
+                          icon: <Mail size={14} />,
+                          full: true,
+                        },
+                      ].map(({ label, key, icon, full }) => (
+                        <div key={key} className={full ? 'sm:col-span-2' : ''}>
+                          <label className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5 block">
+                            <span className="text-secondary">{icon}</span> {label}
+                          </label>
+                          {editing ? (
+                            <input
+                              type="text"
+                              value={form[key as keyof typeof form]}
+                              onChange={(e) => handleField(key, e.target.value)}
+                              className="input-field"
+                            />
+                          ) : (
+                            <p
+                              className="text-sm font-medium text-on-surface py-3 px-4 rounded-xl"
+                              style={{ background: 'var(--surface-container-low)' }}
+                            >
+                              {form[key as keyof typeof form]}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                      <div className="sm:col-span-2">
+                        <label className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5 block">
+                          <Sparkles size={14} className="text-secondary" /> Bio / Travel Preferences
+                        </label>
+                        {editing ? (
+                          <textarea
+                            value={form.bio}
+                            onChange={(e) => handleField('bio', e.target.value)}
+                            rows={3}
+                            className="input-field resize-none"
+                          />
+                        ) : (
+                          <p
+                            className="text-sm text-on-surface py-3 px-4 rounded-xl leading-relaxed"
+                            style={{ background: 'var(--surface-container-low)' }}
+                          >
+                            {form.bio}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    {editing && (
+                      <div className="flex gap-3 mt-6">
+                        <button onClick={() => setEditing(false)} className="btn-secondary">
+                          Discard
+                        </button>
+                        <button onClick={() => setEditing(false)} className="btn-primary">
+                          Update Profile
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Residence */}
+                  <div className="card-editorial p-8">
+                    <h2 className="font-poppins font-bold text-xl text-on-surface mb-6">
+                      Residence Details
+                    </h2>
+                    <div className="grid sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5 block">
+                          <MapPin size={14} className="text-secondary" /> Address
+                        </label>
+                        {editing ? (
+                          <input
+                            type="text"
+                            value={form.address}
+                            onChange={(e) => handleField('address', e.target.value)}
+                            className="input-field"
+                          />
+                        ) : (
+                          <p
+                            className="text-sm font-medium text-on-surface py-3 px-4 rounded-xl"
+                            style={{ background: 'var(--surface-container-low)' }}
+                          >
+                            {form.address}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-primary mb-2 flex items-center gap-1.5 block">
+                          <MapPin size={14} className="text-secondary" /> City
+                        </label>
+                        {editing ? (
+                          <input
+                            type="text"
+                            value={form.city}
+                            onChange={(e) => handleField('city', e.target.value)}
+                            className="input-field"
+                          />
+                        ) : (
+                          <p
+                            className="text-sm font-medium text-on-surface py-3 px-4 rounded-xl"
+                            style={{ background: 'var(--surface-container-low)' }}
+                          >
+                            {form.city}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeSection === 'security' && (
+                <div className="card-editorial p-8">
+                  <h2 className="font-poppins font-bold text-xl text-on-surface mb-6 flex items-center gap-2">
+                    <Shield size={20} className="text-secondary" /> Security &amp; Access
+                  </h2>
+                  <div className="space-y-4">
+                    {[
+                      'Change Password',
+                      'Two-Factor Authentication',
+                      'Active Sessions',
+                      'Delete Account',
+                    ].map((item, i) => (
+                      <div
+                        key={item}
+                        className="flex items-center justify-between p-4 rounded-xl transition-colors cursor-pointer hover:bg-surface-container group"
+                        style={{ background: 'var(--surface-container-low)' }}
+                      >
+                        <div>
+                          <p className="text-sm font-medium text-on-surface">{item}</p>
+                          <p className="text-xs text-primary mt-0.5">
+                            {i === 1
+                              ? 'Not enabled'
+                              : i === 2
+                                ? '1 active session'
+                                : 'Manage your account'}
+                          </p>
+                        </div>
+                        <ChevronRight
+                          size={16}
+                          className="text-primary group-hover:text-secondary transition-colors"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* AI Intelligence card always shown */}
+              <AIInsight title="NestIQ Intelligence — Elite Membership Active">
+                Based on your recent stays in Kyoto, I've curated a private collection of
+                Scandinavian forest retreats and Japanese onsen ryokans that align with your
+                preference for architectural silence. Shall I unlock the Hidden List?
+              </AIInsight>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
