@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CalendarDays, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -18,13 +18,45 @@ const NAV_LINKS = [
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (mobileOpen || currentScrollY <= 0) {
+        setIsVisible(true);
+      } else {
+        const isScrollingUp = currentScrollY < lastScrollY.current;
+        const scrollDelta = Math.abs(currentScrollY - lastScrollY.current);
+
+        if (scrollDelta > 8) {
+          setIsVisible(isScrollingUp);
+        }
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    lastScrollY.current = window.scrollY;
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [mobileOpen]);
+
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href.split('?')[0] ?? href);
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-white/30">
+    <header
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 border-b border-white/30 glass-nav transition-transform duration-300 ease-out',
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      )}
+    >
       <div className="mx-auto flex h-[76px] max-w-[1920px] items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-12">
         <Link
           href="/"
@@ -45,8 +77,8 @@ export default function Navbar() {
               className={cn(
                 'text-sm font-medium tracking-tight transition-colors',
                 isActive(l.href)
-                  ? 'border-b-2 border-orange-700 pb-1 font-semibold text-orange-700'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'border-b-2 border-blue-700 pb-1 font-semibold text-blue-700'
+                  : 'text-stone-600 hover:text-slate-900'
               )}
             >
               {l.label}
@@ -57,20 +89,20 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <Link
             href="/bookings"
-            className="rounded-full p-2 text-stone-600 transition-opacity hover:opacity-80"
+            className="rounded-full p-2 text-stone-600 transition-colors hover:text-blue-700"
             aria-label="Bookings"
           >
             <CalendarDays size={20} />
           </Link>
           <Link
-            href="/login"
-            className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900"
+            href="/auth"
+            className="text-sm font-medium text-stone-600 transition-colors hover:text-slate-900"
           >
             Sign In
           </Link>
           <Link
             href="/register"
-            className="scale-95 rounded-full bg-orange-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-100"
+            className="scale-95 rounded-full bg-[linear-gradient(145deg,#2563eb_0%,#1d4ed8_100%)] px-5 py-2 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(37,99,235,0.2)] transition-all hover:opacity-95 active:scale-100"
           >
             Register
           </Link>
@@ -91,7 +123,12 @@ export default function Navbar() {
               key={l.href}
               href={l.href}
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-surface-container-low transition-colors"
+              className={cn(
+                'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors',
+                isActive(l.href)
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'hover:bg-surface-container-low text-stone-700'
+              )}
             >
               {l.label}
             </Link>
