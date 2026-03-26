@@ -1,43 +1,30 @@
-import REQUEST from "./axios";
-import ROUTES from "../constants/routes.json";
-
-interface LoginPayload {
-    email: string;
-    username: string;
-    password: string;
-}
-
-interface RegisterPayload {
-    username: string;
-    fullname: string;
-    email: string;
-    password: string;
-    address: string;
-    city: string;
-    state: string;
-    pincode: number;
-    phoneNumber: number;
-}
-
-interface ChangePasswordPayload {
-    curPassword: string;
-    newPassword: string;
-}
+import REQUEST from './axios';
+import ROUTES from '../constants/routes.json';
+import {
+  ChangePasswordRequest,
+  ForgotPasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+} from '@/src/types/auth';
 
 export const authService = {
-    register(payload: RegisterPayload) {
-        return REQUEST.post(ROUTES.USER.REGISTER, payload);
-    },
+  register(payload: RegisterRequest) {
+    return REQUEST.post(ROUTES.USER.REGISTER, payload);
+  },
 
-    login(payload: LoginPayload) {
-        return REQUEST.post(ROUTES.USER.LOGIN, payload);
-    },
+  login(payload: LoginRequest) {
+    return REQUEST.post(ROUTES.USER.LOGIN, payload);
+  },
 
-    logout() {
-        return REQUEST.post(ROUTES.USER.LOGOUT);
-    },
+  logout() {
+    return REQUEST.post(ROUTES.USER.LOGOUT);
+  },
 
-    changePassword(payload: ChangePasswordPayload) {
-        return REQUEST.post(ROUTES.USER.CHANGE_PASSWORD, payload);
-    },
+  changePassword(payload: ChangePasswordRequest) {
+    return REQUEST.post(ROUTES.USER.CHANGE_PASSWORD, payload);
+  },
+
+  forgotPassword(payload: ForgotPasswordRequest) {
+    return REQUEST.post(ROUTES.USER.FORGOT_PASSWORD, payload);
+  },
 };
