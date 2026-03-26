@@ -1,12 +1,14 @@
 {
   "USER": {
-    "REGISTER": "/api/v1/user/register",
-    "LOGIN": "/api/v1/user/login",
-    "LOGOUT": "/api/v1/user/logout",
-    "GET_ME": "/api/v1/user/me",
-    "UPDATE_DETAILS": "/api/v1/user/update-details",
-    "CHANGE_PASSWORD": "/api/v1/user/change-password",
-    "GET_ALL_USERS": "/api/v1/user/all-users"
+    "REGISTER": "/api/v1/users/register",
+    "LOGIN": "/api/v1/users/login",
+    "LOGOUT": "/api/v1/users/logout",
+    "GET_ME": "/api/v1/users/me",
+    "UPDATE_DETAILS": "/api/v1/users/update-details",
+    "CHANGE_PASSWORD": "/api/v1/users/change-password",
+    "FORGOT_PASSWORD": "/api/v1/users/forgot-password",
+    "GET_ALL_USERS": "/api/v1/users/all-users",
+    "SET_OWNER": "/api/v1/users/set-owner"
   },
   "HOTEL": {
     "GET_ALL": "/api/v1/hotel/hotels",
@@ -37,9 +39,8 @@
     "GET_BY_HOTEL": "/api/v1/review/:hotelId/reviews"
   },
   "PAYMENT": {
-    "CREATE_ORDER": "/api/v1/payment/create-order",
-    "VERIFY": "/api/v1/payment/verify",
-    "GET_KEY": "/api/v1/payment/razorpay-key"
+    "VERIFY": "/api/v1/payments/verify",
+    "GET_KEY": "/api/v1/payments/razorpaykey"
   },
   "AI": {
     "SEARCH": "/api/v1/ai/search",
