@@ -1,25 +1,10 @@
 import REQUEST from './axios';
 import ROUTES from '../constants/routes.json';
-
-interface CreateBookingPayload {
-  hotelId: string;
-  roomId: string;
-  checkIn: string;
-  checkOut: string;
-  guests: number;
-  specialRequests?: string;
-}
-
-interface VerifyPaymentPayload {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-  bookingId: string;
-}
+import { CreateBookingRequest, UpdateBookingRequest } from '@/src/types/booking';
 
 export const bookingService = {
-  createBooking(payload: CreateBookingPayload) {
-    return REQUEST.post(ROUTES.BOOKING.CREATE, payload);
+  createBooking(payload: CreateBookingRequest) {
+    return REQUEST.post(ROUTES.BOOKING.CREATE_BOOKING, payload);
   },
 
   getMyBookings() {
@@ -39,7 +24,9 @@ export const bookingService = {
     return REQUEST.get(ROUTES.BOOKING.GET_ALL);
   },
 
-  updateBookingStatus(bookingId: string, status: string) {
-    return REQUEST.patch(ROUTES.BOOKING.UPDATE_STATUS.replace(':bookingId', bookingId), { status });
+  updateBookingStatus(payload: UpdateBookingRequest) {
+    return REQUEST.patch(ROUTES.BOOKING.UPDATE_STATUS.replace(':bookingId', payload.bookingId), {
+      status,
+    });
   },
 };
