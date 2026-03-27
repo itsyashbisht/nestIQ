@@ -1,6 +1,10 @@
 import REQUEST from './axios';
 import ROUTES from '../constants/routes.json';
-import { CreateBookingRequest, UpdateBookingRequest } from '@/src/types/booking';
+import {
+  CreateBookingRequest,
+  GetAllBookingsParams,
+  UpdateBookingStatusRequest,
+} from '@/src/types/booking';
 
 export const bookingService = {
   createBooking(payload: CreateBookingRequest) {
@@ -20,13 +24,13 @@ export const bookingService = {
   },
 
   // ADMIN
-  getAllBookings() {
-    return REQUEST.get(ROUTES.BOOKING.GET_ALL);
+  getAllBookings(params: GetAllBookingsParams) {
+    return REQUEST.get(ROUTES.BOOKING.GET_ALL, { params: params });
   },
 
-  updateBookingStatus(payload: UpdateBookingRequest) {
+  updateBookingStatus(payload: UpdateBookingStatusRequest) {
     return REQUEST.patch(ROUTES.BOOKING.UPDATE_STATUS.replace(':bookingId', payload.bookingId), {
-      status,
+      status: payload.status,
     });
   },
 };
