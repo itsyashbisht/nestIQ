@@ -1,8 +1,10 @@
 'use client';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
+// @ts-ignore
 import { StepIndicator } from '@/components/index.tsx';
 
 const REG_STEPS = ['Account', 'Personal', 'Address'];
@@ -32,7 +34,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex" style={{ background: '#0f0f0f' }}>
       {/* Left panel */}
-      <div className="hidden lg:flex flex-col justify-between w-[440px] flex-shrink-0 p-12 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between w-[440px] shrink-0 p-12 relative overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80"
           alt=""

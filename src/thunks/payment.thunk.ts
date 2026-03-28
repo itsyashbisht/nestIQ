@@ -5,10 +5,9 @@ import {
   verifyPaymentRequest,
   verifyPaymentResponse,
 } from '@/src/types/payment';
-import { ApiResponse } from '@/src/types';
 
 export const getRazorpayKeyId = createAsyncThunk<
-  ApiResponse<getRazorpayKeyResponse>,
+  getRazorpayKeyResponse,
   void,
   { rejectValue: string }
 >('payment/getKey', async (_, { rejectWithValue }) => {
@@ -23,7 +22,7 @@ export const getRazorpayKeyId = createAsyncThunk<
 });
 
 export const verifyPayment = createAsyncThunk<
-  ApiResponse<verifyPaymentResponse>,
+  verifyPaymentResponse,
   verifyPaymentRequest,
   { rejectValue: string }
 >('payment/verify', async (payload: verifyPaymentRequest, { rejectWithValue }) => {

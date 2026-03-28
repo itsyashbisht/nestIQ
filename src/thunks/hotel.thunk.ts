@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { hotelService } from '@/src/apiServices/hotel.services';
-import { ApiError, ApiResponse } from '@/src/types';
 import {
   CreateHotelRequest,
   GetAllHotelsParams,
@@ -9,9 +8,9 @@ import {
 } from '@/src/types/hotel';
 
 export const getAllHotels = createAsyncThunk<
-  ApiResponse<IHotel[]>,
+  IHotel[],
   GetAllHotelsParams,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('hotel/getAllHotels', async (payload, { rejectWithValue }) => {
   try {
     const response = await hotelService.getAllHotels(payload);
@@ -21,36 +20,34 @@ export const getAllHotels = createAsyncThunk<
   }
 });
 
-export const getHotelById = createAsyncThunk<
-  ApiResponse<IHotel>,
-  string,
-  { rejectValue: ApiError }
->('hotel/getHotelById', async (payload, { rejectWithValue }) => {
+export const getHotelById = createAsyncThunk<IHotel, string, { rejectValue: string }>(
+  'hotel/getHotelById',
+  async (payload, { rejectWithValue }) => {
   try {
     const response = await hotelService.getHotelById(payload);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error?.response?.data?.message || 'Failed to get hotel by Id');
   }
-});
+  }
+);
 
-export const getHotelBySlug = createAsyncThunk<
-  ApiResponse<IHotel>,
-  string,
-  { rejectValue: ApiError }
->('hotel/getHotelBySlug', async (payload, { rejectWithValue }) => {
+export const getHotelBySlug = createAsyncThunk<IHotel, string, { rejectValue: string }>(
+  'hotel/getHotelBySlug',
+  async (payload, { rejectWithValue }) => {
   try {
     const response = await hotelService.getHotelBySlug(payload);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error?.response?.data?.message || 'Failed to get hotel by slug');
   }
-});
+  }
+);
 
 export const createHotel = createAsyncThunk<
-  ApiResponse<IHotel>,
+  IHotel,
   CreateHotelRequest,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('hotel/create', async (payload, { rejectWithValue }) => {
   try {
     const response = await hotelService.createHotel(payload);
@@ -61,9 +58,9 @@ export const createHotel = createAsyncThunk<
 });
 
 export const updateHotel = createAsyncThunk<
-  ApiResponse<IHotel>,
+  IHotel,
   UpdateHotelRequest,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('hotel/update', async (payload, { rejectWithValue }) => {
   try {
     const response = await hotelService.updateHotel(payload);
@@ -73,7 +70,7 @@ export const updateHotel = createAsyncThunk<
   }
 });
 
-export const deleteHotel = createAsyncThunk<ApiResponse<null>, string, { rejectValue: ApiError }>(
+export const deleteHotel = createAsyncThunk<null, string, { rejectValue: string }>(
   'hotel/deleteHotel',
   async (payload, { rejectWithValue }) => {
     try {

@@ -1,16 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ApiError, ApiResponse, IBooking } from '@/src/types';
 import {
   CreateBookingRequest,
+  CreateBookingResponse,
   GetAllBookingsParams,
+  GetAllBookingsResponse,
+  IBooking,
+  IBookingDetail,
+  IBookingWithHotel,
   UpdateBookingStatusRequest,
 } from '@/src/types/booking';
 import { bookingService } from '@/src/apiServices/booking.services';
 
 export const createBooking = createAsyncThunk<
-  ApiResponse<IBooking>,
+  CreateBookingResponse,
   CreateBookingRequest,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('booking/create', async (payload, { rejectWithValue }) => {
   try {
     const response = await bookingService.createBooking(payload);
@@ -20,36 +24,34 @@ export const createBooking = createAsyncThunk<
   }
 });
 
-export const getMyBookings = createAsyncThunk<
-  ApiResponse<IBooking[]>,
-  void,
-  { rejectValue: ApiError }
->('booking/myBookings', async (_: void, { rejectWithValue }) => {
-  try {
-    const response = await bookingService.getMyBookings();
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Failed to getMyBookings');
+export const getMyBookings = createAsyncThunk<IBookingWithHotel, void, { rejectValue: string }>(
+  'booking/myBookings',
+  async (_: void, { rejectWithValue }) => {
+    try {
+      const response = await bookingService.getMyBookings();
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to getMyBookings');
+    }
   }
-});
+);
 
-export const getBookingById = createAsyncThunk<
-  ApiResponse<IBooking>,
-  string,
-  { rejectValue: ApiError }
->('booking/byId', async (payload, { rejectWithValue }) => {
-  try {
-    const response = await bookingService.getBookingById(payload);
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Failed to get Booking by Id');
+export const getBookingById = createAsyncThunk<IBookingDetail, string, { rejectValue: string }>(
+  'booking/byId',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await bookingService.getBookingById(payload);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to get Booking by Id');
+    }
   }
-});
+);
 
 export const updateBookingStatus = createAsyncThunk<
-  ApiResponse<IBooking>,
+  IBooking,
   UpdateBookingStatusRequest,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('booking/updateStatus', async (payload, { rejectWithValue }) => {
   try {
     const response = await bookingService.updateBookingStatus(payload);
@@ -59,23 +61,22 @@ export const updateBookingStatus = createAsyncThunk<
   }
 });
 
-export const cancelBooking = createAsyncThunk<
-  ApiResponse<IBooking>,
-  string,
-  { rejectValue: ApiError }
->('booking/cancel', async (payload, { rejectWithValue }) => {
-  try {
-    const response = await bookingService.cancelBooking(payload);
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error?.response?.data?.message || 'Failed to cancel Booking');
+export const cancelBooking = createAsyncThunk<IBooking, string, { rejectValue: string }>(
+  'booking/cancel',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await bookingService.cancelBooking(payload);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error?.response?.data?.message || 'Failed to cancel Booking');
+    }
   }
-});
+);
 
 export const getAllBookings = createAsyncThunk<
-  ApiResponse<IBooking[]>,
+  GetAllBookingsResponse,
   GetAllBookingsParams,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('booking/allBookings', async (params, { rejectWithValue }) => {
   try {
     const response = await bookingService.getAllBookings(params);

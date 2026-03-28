@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ApiError, ApiResponse } from '@/src/types';
 import {
   AddRoomImagesRequest,
   CreateRoomRequest,
@@ -10,10 +9,10 @@ import {
 import { roomServices } from '@/src/apiServices/room.services';
 
 export const createRoom = createAsyncThunk<
-  ApiResponse<IRoom>,
+  IRoom,
   CreateRoomRequest,
   {
-    rejectValue: ApiError;
+    rejectValue: string;
   }
 >('room/create', async (payload, { rejectWithValue }) => {
   try {
@@ -24,7 +23,7 @@ export const createRoom = createAsyncThunk<
   }
 });
 
-export const deleteRoom = createAsyncThunk<ApiResponse<null>, string, { rejectValue: ApiError }>(
+export const deleteRoom = createAsyncThunk<null, string, { rejectValue: string }>(
   'room/delete',
   async (roomId, { rejectWithValue }) => {
     try {
@@ -37,9 +36,9 @@ export const deleteRoom = createAsyncThunk<ApiResponse<null>, string, { rejectVa
 );
 
 export const updateRoom = createAsyncThunk<
-  ApiResponse<IRoom>,
+  IRoom,
   UpdateRoomRequest,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('room/update', async (payload, { rejectWithValue }) => {
   try {
     const response = await roomServices.updateRoom(payload);
@@ -49,7 +48,7 @@ export const updateRoom = createAsyncThunk<
   }
 });
 
-export const getRoomById = createAsyncThunk<ApiResponse<IRoom>, string, { rejectValue: ApiError }>(
+export const getRoomById = createAsyncThunk<IRoom, string, { rejectValue: string }>(
   'room/getById',
   async (roomId, { rejectWithValue }) => {
     try {
@@ -62,9 +61,9 @@ export const getRoomById = createAsyncThunk<ApiResponse<IRoom>, string, { reject
 );
 
 export const getRoomByHotelId = createAsyncThunk<
-  ApiResponse<IRoom>,
+  IRoom,
   string,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('room/getRoomByHotelId', async (hotelId, { rejectWithValue }) => {
   try {
     const response = await roomServices.getRoomByHotel(hotelId);
@@ -75,9 +74,9 @@ export const getRoomByHotelId = createAsyncThunk<
 });
 
 export const toggleRoomAvailability = createAsyncThunk<
-  ApiResponse<IRoom>,
+  IRoom,
   string,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('room/toggleRoomAvailability', async (roomId, { rejectWithValue }) => {
   try {
     const response = await roomServices.toggleRoomAvailability(roomId);
@@ -88,9 +87,9 @@ export const toggleRoomAvailability = createAsyncThunk<
 });
 
 export const addRoomImages = createAsyncThunk<
-  ApiResponse<IRoom>,
+  IRoom,
   AddRoomImagesRequest,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('room/addRoomImages', async (payload, { rejectWithValue }) => {
   try {
     const response = await roomServices.addImages(payload);
@@ -101,9 +100,9 @@ export const addRoomImages = createAsyncThunk<
 });
 
 export const removeRoomImages = createAsyncThunk<
-  ApiResponse<IRoom>,
+  IRoom,
   RemoveRoomImagesRequest,
-  { rejectValue: ApiError }
+  { rejectValue: string }
 >('room/removeRoomImages', async (payload, { rejectWithValue }) => {
   try {
     const response = await roomServices.removeImages(payload);
