@@ -8,6 +8,9 @@ interface PaymentState {
   error: string | null;
 }
 
+const getErrorMessage = (payload: unknown): string =>
+  typeof payload === 'string' ? payload : 'Something went wrong';
+
 const initialState: PaymentState = {
   razorpayKeyId: '',
   verifyStatus: 'idle',
@@ -32,11 +35,11 @@ const paymentSlice = createSlice({
       })
       .addCase(getRazorpayKeyId.fulfilled, (state, action) => {
         state.keyStatus = 'succeeded';
-        state.razorpayKeyId = action.payload;
+        state.razorpayKeyId = action.payload.razorpaykeyId;
       })
       .addCase(getRazorpayKeyId.rejected, (state, action) => {
         state.keyStatus = 'failed';
-        state.error = action.payload;
+        state.error = getErrorMessage(action.payload);
       })
 
       .addCase(verifyPayment.pending, (state) => {
@@ -47,7 +50,7 @@ const paymentSlice = createSlice({
       })
       .addCase(verifyPayment.rejected, (state, action) => {
         state.verifyStatus = 'failed';
-        state.error = action.payload;
+        state.error = getErrorMessage(action.payload);
       });
   },
 });
