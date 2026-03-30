@@ -38,6 +38,7 @@ export const roomServices = {
   removeImages: (payload: RemoveRoomImagesRequest) => {
     return REQUEST.delete(
       ROUTES.ROOM.REMOVE_IMAGES.replace('roomId', payload.roomId),
+      // @ts-ignore
       payload?.publicId
     );
   },

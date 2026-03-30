@@ -23,8 +23,8 @@ export interface RegisterRequest {
   address: string;
   city: string;
   state: string;
-  pincode: number;
-  phoneNumber: number;
+  pincode: number | null;
+  phoneNumber: number | null;
 }
 
 export interface LoginRequest {

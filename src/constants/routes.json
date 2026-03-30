@@ -11,7 +11,7 @@
     "SET_OWNER": "/api/v1/users/set-owner"
   },
   "HOTEL": {
-    "GET_ALL": "/api/v1/hotel/hotels",
+    "GET_ALL": "/api/v1/hotel/all",
     "GET_BY_ID": "/api/v1/hotel/:hotelId",
     "GET_BY_SLUG": "/api/v1/hotel/slug/:slug",
     "CREATE": "/api/v1/hotel/create",
@@ -20,18 +20,22 @@
     "SEARCH": "/api/v1/hotel/search"
   },
   "ROOM": {
-    "GET_BY_HOTEL": "/api/v1/room/:hotelId/rooms",
-    "CREATE": "/api/v1/room/:hotelId/create",
-    "UPDATE": "/api/v1/room/update/:roomId",
-    "DELETE": "/api/v1/room/delete/:roomId"
+    "CREATE": "/api/v1/rooms/create",
+    "DELETE": "/api/v1/rooms/delete/:roomId",
+    "UPDATE": "/api/v1/rooms/update/:roomId",
+    "GET_BY_ID": "/api/v1/rooms/:roomId",
+    "GET_BY_HOTEL": "/api/v1/rooms/hotel/:hotelId",
+    "TOGGLE_ROOM_AVAILABILITY": "/api/v1/rooms/:roomId/toggle-room-availability",
+    "ADD_IMAGES": "/api/v1/rooms/:roomId/add-images",
+    "REMOVE_IMAGES": "/api/v1/rooms/:roomId/remove-images"
   },
   "BOOKING": {
-    "CREATE": "/api/v1/booking/create",
-    "GET_MY_BOOKINGS": "/api/v1/booking/my-bookings",
-    "GET_BY_ID": "/api/v1/booking/:bookingId",
-    "CANCEL": "/api/v1/booking/cancel/:bookingId",
-    "GET_ALL": "/api/v1/booking/all-bookings",
-    "UPDATE_STATUS": "/api/v1/booking/update-status/:bookingId"
+    "CREATE_BOOKING": "/api/v1/bookings/create-booking",
+    "GET_MY_BOOKINGS": "/api/v1/bookings/my-bookings",
+    "GET_BY_ID": "/api/v1/bookings/:bookingId",
+    "CANCEL": "/api/v1/bookings/cancel/:bookingId",
+    "GET_ALL": "/api/v1/bookings/all-bookings",
+    "UPDATE_STATUS": "/api/v1/bookings/update-status/:bookingId"
   },
   "REVIEW": {
     "ADD": "/api/v1/review/:hotelId/add",

@@ -14,6 +14,7 @@ export const userService = {
   getAllUsers() {
     return REQUEST.get(ROUTES.USER.GET_ALL_USERS);
   },
+
   updateRoleToOwner() {
     return REQUEST.get(ROUTES.USER.SET_OWNER);
   },

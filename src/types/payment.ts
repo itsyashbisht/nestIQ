@@ -1,4 +1,4 @@
-import { IBooking } from '@/src/types/index';
+import { IBooking } from '@/src/types/booking';
 
 export interface verifyPaymentRequest {
   razorpay_order_id: string;
