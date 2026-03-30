@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Check, Mail, Phone, Send, Sparkles } from 'lucide-react';
 import Navbar from '@/components/layouts/Navigation';
 import Footer from '@/components/layouts/Footer';
-import { SectionHeader } from '@/components/index.tsx';
+
+import { SectionHeader } from '@/components/sectionHeader';
 
 const OFFICES = [
   { city: 'London, UK', area: 'Mayfair District', address: '42 Curzon Street', icon: '🇬🇧' },
@@ -92,7 +93,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="rounded-2xl p-6 text-white" style={{ background: '#0f0f0f' }}>
-                  <Sparkles size={16} className="text-amber-400 mb-3" />
+              <Sparkles size={16} className="text-secondary mb-3" />
                   <h4 className="font-poppins font-bold text-base mb-2">
                     Intelligence Peak — Instant Curation
                   </h4>

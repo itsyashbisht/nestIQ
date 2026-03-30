@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Bell, Check, Flower, Home, Loader2, Sparkles, Zap } from 'lucide-react';
 import Navbar from '@/components/layouts/Navigation';
 import Footer from '@/components/layouts/Footer';
-import { AIInsight, StepIndicator } from '@/components/index.tsx';
+import { AIInsight } from '@/components/AIInsight';
+import { StepIndicator } from '@/components/stepIndicator';
 
 const TIPS = [
   {
@@ -243,11 +244,14 @@ export default function AIListingPage() {
                 </div>
               ))}
               <div className="rounded-xl overflow-hidden h-44">
-                <img
-                  src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&q=80"
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
+                <div className="relative w-full h-full">
+                  <img
+                    src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&q=80"
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.16)_0%,rgba(126,45,147,0.12)_100%)]" />
+                </div>
               </div>
             </div>
           </div>

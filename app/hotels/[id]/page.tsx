@@ -4,9 +4,10 @@ import Link from 'next/link';
 import { ArrowLeft, Check, ChevronRight, Heart, MapPin, Share2, Star } from 'lucide-react';
 import Navbar from '@/components/layouts/Navigation';
 import Footer from '@/components/layouts/Footer';
-import { AIInsight, Badge } from '@/components/index.tsx';
 import { MOCK_HOTELS } from '@/src/lib/data';
 import { formatCurrency } from '@/src/lib/utils';
+import { Badge } from '@/components/badge';
+import { AIInsight } from '@/components/AIInsight';
 
 export default function HotelDetailPage({ params }: { params: { id: string } }) {
   const hotel = MOCK_HOTELS.find((h) => h.id === params.id) || MOCK_HOTELS[0];
@@ -54,7 +55,7 @@ export default function HotelDetailPage({ params }: { params: { id: string } }) 
               </h1>
               <div className="flex flex-wrap items-center gap-4 text-sm">
                 <div className="flex items-center gap-1.5">
-                  <Star size={15} fill="#9b4701" className="text-secondary" />
+            <Star size={15} fill="#9c36b5" className="text-secondary" />
                   <span className="font-semibold text-secondary">{hotel.rating}</span>
                   <span className="text-primary">({hotel.reviews.toLocaleString()} reviews)</span>
                 </div>
@@ -69,7 +70,7 @@ export default function HotelDetailPage({ params }: { params: { id: string } }) 
                 onClick={() => setSaved(!saved)}
                 className={`p-3 rounded-xl border transition-all ${saved ? 'border-secondary bg-secondary-container text-secondary' : 'border-surface-container-high hover:bg-surface-container-low text-primary'}`}
               >
-                <Heart size={18} fill={saved ? '#9b4701' : 'none'} />
+              <Heart size={18} fill={saved ? '#9c36b5' : 'none'} />
               </button>
               <button className="p-3 rounded-xl border border-surface-container-high hover:bg-surface-container-low text-primary transition-all">
                 <Share2 size={18} />
@@ -83,11 +84,14 @@ export default function HotelDetailPage({ params }: { params: { id: string } }) 
               className="col-span-2 row-span-2 overflow-hidden cursor-pointer"
               onClick={() => setActiveImage(0)}
             >
-              <img
-                src={hotel.images[0]}
-                alt={hotel.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
+              <div className="relative w-full h-full">
+                <img
+                  src={hotel.images[0]}
+                  alt={hotel.name}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.14)_0%,rgba(126,45,147,0.08)_100%)]" />
+              </div>
             </div>
             {hotel.images.slice(1, 4).map((img, i) => (
               <div
@@ -95,11 +99,14 @@ export default function HotelDetailPage({ params }: { params: { id: string } }) 
                 className="overflow-hidden cursor-pointer"
                 onClick={() => setActiveImage(i + 1)}
               >
-                <img
-                  src={img}
-                  alt=""
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
+                <div className="relative w-full h-full">
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.12)_0%,rgba(126,45,147,0.08)_100%)]" />
+                </div>
               </div>
             ))}
             {hotel.images.length < 4 &&
@@ -111,11 +118,14 @@ export default function HotelDetailPage({ params }: { params: { id: string } }) 
                     className="overflow-hidden"
                     style={{ background: 'var(--surface-container)' }}
                   >
-                    <img
-                      src={hotel.images[0]}
-                      alt=""
-                      className="w-full h-full object-cover opacity-60"
-                    />
+                    <div className="relative w-full h-full">
+                      <img
+                        src={hotel.images[0]}
+                        alt=""
+                        className="w-full h-full object-cover opacity-60"
+                      />
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.18)_0%,rgba(126,45,147,0.1)_100%)]" />
+                    </div>
                   </div>
                 ))}
           </div>
@@ -198,7 +208,7 @@ export default function HotelDetailPage({ params }: { params: { id: string } }) 
                     <span className="text-base font-normal text-primary">/night</span>
                   </p>
                   <div className="flex items-center gap-1 mt-1">
-                    <Star size={12} fill="#9b4701" className="text-secondary" />
+                      <Star size={12} fill="#9c36b5" className="text-secondary" />
                     <span className="text-xs font-semibold text-secondary">{hotel.rating}</span>
                     <span className="text-xs text-primary">
                       · {hotel.reviews.toLocaleString()} reviews

@@ -21,11 +21,14 @@ export default function HotelCard({ hotel, variant = 'default', className }: Hot
         )}
       >
         <div className="w-48 shrink-0 overflow-hidden">
-          <img
-            src={hotel.image}
-            alt={hotel.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+          <div className="relative h-full">
+            <img
+              src={hotel.image}
+              alt={hotel.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.14)_0%,rgba(126,45,147,0.08)_100%)]" />
+          </div>
         </div>
         <div className="p-5 flex flex-col justify-between flex-1">
           <div>
@@ -50,7 +53,7 @@ export default function HotelCard({ hotel, variant = 'default', className }: Hot
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <Star size={13} fill="#9b4701" className="text-secondary" />
+                <Star size={13} fill="#9c36b5" className="text-secondary" />
               <span className="text-sm font-semibold text-secondary">{hotel.rating}</span>
               <span className="text-xs text-primary">({hotel.reviews.toLocaleString()})</span>
             </div>
@@ -77,10 +80,10 @@ export default function HotelCard({ hotel, variant = 'default', className }: Hot
           alt={hotel.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(126,45,147,0.18)_0%,rgba(15,15,15,0.12)_32%,rgba(15,15,15,0.72)_100%)]" />
         {hotel.aiMatch && (
           <div className="absolute top-4 left-4 glass-dark text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-            <Sparkles size={11} className="text-amber-400" />
+            <Sparkles size={11} className="text-[#e7c4f1]" />
             {hotel.aiMatch}% Match
           </div>
         )}
@@ -128,10 +131,10 @@ export default function HotelCard({ hotel, variant = 'default', className }: Hot
           alt={hotel.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.14)_0%,rgba(15,15,15,0.02)_42%,rgba(15,15,15,0.34)_100%)]" />
         {hotel.aiMatch && (
           <div className="absolute top-3 left-3 glass-dark text-white text-[10px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
-            <Sparkles size={9} className="text-amber-400" />
+            <Sparkles size={9} className="text-[#e7c4f1]" />
             {hotel.aiMatch}%
           </div>
         )}
@@ -157,7 +160,7 @@ export default function HotelCard({ hotel, variant = 'default', className }: Hot
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
-            <Star size={13} fill="#9b4701" className="text-secondary" />
+                <Star size={13} fill="#9c36b5" className="text-secondary" />
             <span className="text-sm font-semibold text-secondary">{hotel.rating}</span>
             <span className="text-xs text-primary">({hotel.reviews.toLocaleString()})</span>
           </div>

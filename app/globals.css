@@ -8,11 +8,8 @@
    Version: 1.0.0
 */
 
-
-
 @import "tailwindcss";
 @tailwind utilities;
-
 
 :root {
     --surface: #f9f9f7;
@@ -26,8 +23,10 @@
     --on-surface: #2d3432;
     --primary: #5f5e5e;
     --primary-dim: #535252;
-    --secondary: #9b4701;
-    --secondary-container: #fde8d8;
+    --secondary: #9c36b5;
+    --secondary-container: #f3e3f7;
+    --accent-strong: #7e2d93;
+    --accent-soft: #ead7f2;
 }
 
 * {
@@ -84,13 +83,13 @@ body {
 
     .btn-amber {
         @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all duration-200;
-        background: linear-gradient(145deg, #9b4701, #b85200);
-        box-shadow: 0 4px 14px rgba(155, 71, 1, 0.3);
+        background: linear-gradient(145deg, #9c36b5, #7e2d93);
+        box-shadow: 0 4px 14px rgba(156, 54, 181, 0.3);
     }
 
     .btn-amber:hover {
         @apply -translate-y-0.5;
-        box-shadow: 0 8px 20px rgba(155, 71, 1, 0.4);
+        box-shadow: 0 8px 20px rgba(156, 54, 181, 0.4);
     }
 
     .card-editorial {
@@ -110,7 +109,7 @@ body {
 
     .input-field:focus {
         background: var(--surface-bright);
-        box-shadow: 0 0 0 2px rgba(155, 71, 1, 0.2);
+        box-shadow: 0 0 0 2px rgba(156, 54, 181, 0.2);
     }
 
     .ai-insight {

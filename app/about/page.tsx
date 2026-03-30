@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { ArrowRight, MapPin } from 'lucide-react';
 import Navbar from '@/components/layouts/Navigation';
 import Footer from '@/components/layouts/Footer';
-import { SectionHeader } from '@/components/index.tsx';
+
+import { SectionHeader } from '@/components/sectionHeader';
 
 const STATS = [
   { value: '150+', label: 'Hand-Picked Havens' },
@@ -55,11 +56,11 @@ export default function AboutPage() {
             alt=""
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.14)_0%,rgba(0,0,0,0.24)_32%,rgba(0,0,0,0.78)_100%)]" />
           <div className="relative z-10 max-w-7xl mx-auto px-6 pb-16 w-full">
             <p
               className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: '#f59e0b' }}
+              style={{ color: 'var(--secondary)' }}
             >
               The New Era of Hospitality
             </p>
@@ -170,11 +171,14 @@ export default function AboutPage() {
                   key={member.name}
                   className="card-editorial p-6 flex flex-col items-center text-center"
                 >
-                  <img
-                    src={member.img}
-                    alt={member.name}
-                    className="w-20 h-20 rounded-full object-cover mb-4"
-                  />
+                  <div className="relative mb-4">
+                    <img
+                      src={member.img}
+                      alt={member.name}
+                      className="w-20 h-20 rounded-full object-cover"
+                    />
+                    <div className="absolute inset-0 rounded-full ring-2 ring-[var(--secondary-container)]" />
+                  </div>
                   <h4 className="font-poppins font-bold text-on-surface">{member.name}</h4>
                   <p className="text-xs text-primary mt-1">{member.role}</p>
                 </div>
@@ -188,7 +192,7 @@ export default function AboutPage() {
             <div>
               <p
                 className="text-xs font-semibold uppercase tracking-widest mb-3"
-                style={{ color: '#f59e0b' }}
+                style={{ color: 'var(--secondary)' }}
               >
                 Global Presence
               </p>
@@ -204,7 +208,7 @@ export default function AboutPage() {
                 {['London · Mayfair', 'Kyoto · Gion', 'Mumbai · Bandra', 'New York · SoHo'].map(
                   (loc) => (
                     <div key={loc} className="flex items-center gap-2 text-sm text-white/60">
-                      <MapPin size={13} style={{ color: '#f59e0b' }} /> {loc}
+                      <MapPin size={13} style={{ color: 'var(--secondary)' }} /> {loc}
                     </div>
                   )
                 )}

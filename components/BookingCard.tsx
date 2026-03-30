@@ -17,7 +17,10 @@ export default function BookingCard({ booking }: { booking: Booking }) {
     <div className="card-editorial overflow-hidden">
       <div className="flex flex-col sm:flex-row">
         <div className="sm:w-48 h-40 sm:h-auto flex-shrink-0 overflow-hidden">
-          <img src={booking.image} alt={booking.hotelName} className="w-full h-full object-cover" />
+          <div className="relative h-full">
+            <img src={booking.image} alt={booking.hotelName} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.16)_0%,rgba(126,45,147,0.1)_100%)]" />
+          </div>
         </div>
         <div className="p-6 flex flex-col justify-between flex-1">
           <div className="flex items-start justify-between gap-4">

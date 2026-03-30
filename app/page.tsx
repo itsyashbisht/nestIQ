@@ -4,16 +4,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/layouts/Navigation';
 import {
+  CalendarDays,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   Globe,
   Mail,
+  MapPin,
   Minus,
   Plus,
   Share2,
   Sparkles,
   Star,
+  Users,
 } from 'lucide-react';
 
 const features = [
@@ -90,7 +93,7 @@ function SectionEyebrow({
 }: Readonly<{ children: React.ReactNode; muted?: boolean }>) {
   return (
     <span
-      className={`text-sm font-bold uppercase tracking-[0.2em] ${muted ? 'text-stone-500' : 'text-orange-700'}`}
+        className={`text-sm font-bold uppercase tracking-[0.2em] ${muted ? 'text-stone-500' : 'text-secondary'}`}
     >
       {children}
     </span>
@@ -98,88 +101,125 @@ function SectionEyebrow({
 }
 
 function HeroCard() {
+  const fieldShell =
+    'rounded-[1.15rem] border border-[rgba(156,54,181,0.14)] bg-[rgba(255,255,255,0.62)] px-3.5 py-2.5 shadow-[0_6px_18px_rgba(37,24,42,0.05)] backdrop-blur-md';
+
   return (
-    <div className="w-full max-w-lg space-y-4 rounded-[1.5rem] border border-white/65 bg-white/82 p-4 shadow-[0px_18px_44px_rgba(17,24,39,0.14)] backdrop-blur-xl sm:p-5 lg:ml-auto lg:max-w-[23rem] lg:space-y-5 lg:p-6 xl:max-w-[24rem] 2xl:max-w-[22rem]">
-      <div className="space-y-1.5">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-blue-700 sm:text-[11px]">
-          AI Concierge Discovery
-        </span>
-        <h2
-          className="text-[1.65rem] font-bold leading-tight text-[#1f2a37] sm:text-[1.8rem] 2xl:text-[1.72rem]"
-          style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-        >
-          Plan Your Escape
-        </h2>
-        <p className="text-sm leading-relaxed text-slate-500">
-          Fast, focused trip discovery with concise inputs and better results.
-        </p>
+    <div className="w-full max-w-lg rounded-[2rem] border border-[rgba(255,255,255,0.38)] bg-[linear-gradient(180deg,rgba(255,255,255,0.74)_0%,rgba(250,246,252,0.66)_100%)] p-4 shadow-[0_24px_60px_rgba(22,14,28,0.16)] backdrop-blur-2xl sm:p-5 lg:ml-auto lg:max-w-[24rem] xl:max-w-[25rem] 2xl:max-w-[26rem]">
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div className="space-y-1.5">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-secondary sm:text-[11px]">
+            AI Concierge Discovery
+          </span>
+          <h2
+            className="text-[1.55rem] font-bold leading-tight text-[#1f2a37] sm:text-[1.72rem]"
+            style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+          >
+            Plan Your Escape
+          </h2>
+          <p className="max-w-xs text-[13px] leading-relaxed text-slate-500">
+            Refined trip planning with mood-led discovery and sharper inputs.
+          </p>
+        </div>
+        <div className="rounded-full border border-[rgba(156,54,181,0.16)] bg-[rgba(156,54,181,0.08)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-secondary">
+          Live AI
+        </div>
       </div>
-      <div className="space-y-3">
-        <label className="flex flex-col gap-1 rounded-[1rem] border border-slate-200 bg-white px-3.5 py-3 shadow-[0_1px_0_rgba(15,23,42,0.03)]">
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+
+      <div className="space-y-3.5">
+        <label className={`block ${fieldShell}`}>
+          <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            <MapPin className="h-3.5 w-3.5 text-secondary" />
             Destination
           </span>
           <input
             type="text"
-            placeholder="Where do you want to feel?"
-            className="border-none bg-transparent p-0 text-sm font-medium text-[#1f2a37] outline-none placeholder:text-slate-400 focus:ring-0"
+            placeholder="Kyoto, Amalfi, Udaipur..."
+            className="w-full border-none bg-transparent p-0 text-[14px] font-medium text-[#1f2a37] outline-none placeholder:text-slate-400 focus:ring-0"
           />
         </label>
+
         <div className="grid grid-cols-2 gap-3">
-          <label className="flex flex-col gap-1 rounded-[1rem] border border-slate-200 bg-white px-3.5 py-3 shadow-[0_1px_0_rgba(15,23,42,0.03)]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+          <label className={`block ${fieldShell}`}>
+            <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+              <CalendarDays className="h-3.5 w-3.5 text-secondary" />
               Arrival
             </span>
-            <input
-              type="text"
-              placeholder="Add date"
-              className="border-none bg-transparent p-0 text-sm font-medium text-[#1f2a37] outline-none placeholder:text-slate-400 focus:ring-0"
-            />
+            <div className="relative">
+              <input
+                type="date"
+                className="w-full border-none bg-transparent p-0 pr-6 text-[14px] font-medium text-[#1f2a37] outline-none focus:ring-0 [color-scheme:light]"
+              />
+              <CalendarDays className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-[#b15ac8]" />
+            </div>
           </label>
-          <label className="flex flex-col gap-1 rounded-[1rem] border border-slate-200 bg-white px-3.5 py-3 shadow-[0_1px_0_rgba(15,23,42,0.03)]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+
+          <label className={`block ${fieldShell}`}>
+            <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+              <Users className="h-3.5 w-3.5 text-secondary" />
               Guests
             </span>
-            <input
-              type="text"
-              placeholder="2 Adults"
-              className="border-none bg-transparent p-0 text-sm font-medium text-[#1f2a37] outline-none placeholder:text-slate-400 focus:ring-0"
-            />
+            <select className="w-full appearance-none border-none bg-transparent p-0 text-[14px] font-medium text-[#1f2a37] outline-none focus:ring-0">
+              <option>2 Guests</option>
+              <option>1 Guest</option>
+              <option>3 Guests</option>
+              <option>4 Guests</option>
+              <option>5+ Guests</option>
+            </select>
           </label>
         </div>
-        <label className="flex flex-col gap-1 rounded-[1rem] border border-blue-100 bg-blue-50/70 px-3.5 py-3">
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-blue-700">
+
+        <label className="block rounded-[1.15rem] border border-[rgba(156,54,181,0.18)] bg-[linear-gradient(180deg,rgba(156,54,181,0.08)_0%,rgba(255,255,255,0.58)_100%)] px-3.5 py-2.5 shadow-[0_6px_18px_rgba(37,24,42,0.05)] backdrop-blur-md">
+          <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-secondary">
+            <Sparkles className="h-3.5 w-3.5" />
             Desired Mood
           </span>
           <div className="relative">
-            <select className="w-full appearance-none border-none bg-transparent p-0 pr-6 text-sm font-medium text-[#1f2a37] outline-none focus:ring-0">
+            <select className="w-full appearance-none border-none bg-transparent p-0 pr-6 text-[14px] font-medium text-[#1f2a37] outline-none focus:ring-0">
               <option>Quiet Contemplation</option>
               <option>Social Energy</option>
               <option>Wild Adventure</option>
               <option>Deep Rest</option>
             </select>
-            <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-500" />
+            <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 text-[#b15ac8]" />
           </div>
         </label>
+
+        <div className="grid grid-cols-3 gap-2 rounded-[1.1rem] border border-[rgba(156,54,181,0.1)] bg-[rgba(255,255,255,0.46)] px-3 py-2.5 text-center">
+          {[
+            ['Private perks', 'Always on'],
+            ['Mood match', '98.4%'],
+            ['Fast shortlist', '< 30 sec'],
+          ].map(([label, value]) => (
+            <div key={label}>
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                {label}
+              </p>
+              <p className="mt-1 text-[12px] font-semibold text-[#2b3241]">{value}</p>
+            </div>
+          ))}
+        </div>
+
+        <button className="w-full rounded-full bg-[linear-gradient(145deg,#9c36b5_0%,#7e2d93_100%)] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(156,54,181,0.28)] transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_34px_rgba(156,54,181,0.34)]">
+          Begin Journey
+        </button>
       </div>
-      <button className="w-full rounded-full bg-[linear-gradient(145deg,#2563eb_0%,#1d4ed8_100%)] px-4 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(37,99,235,0.28)] transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_34px_rgba(37,99,235,0.34)]">
-        Begin Journey
-      </button>
     </div>
   );
 }
 
 function Offer({ offer }: Readonly<{ offer: (typeof offers)[number] }>) {
   return (
-    <article className="group cursor-pointer">
-      <div className="relative mb-5 aspect-4/5 overflow-hidden rounded-2xl lg:max-h-[46vh] lg:aspect-3/4 2xl:max-h-[42vh] 2xl:aspect-[0.78]">
+    <article className="group flex h-full min-h-[34rem] cursor-pointer flex-col rounded-[1.75rem] bg-white/78 p-4 shadow-[0_16px_38px_rgba(45,52,50,0.08)] backdrop-blur-sm">
+      <div className="relative mb-5 aspect-[4/5] min-h-[21rem] overflow-hidden rounded-2xl">
         <Image
           src={offer.image}
           alt={offer.title}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute left-4 top-4 rounded bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-orange-700 backdrop-blur">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.14)_0%,rgba(20,14,26,0.06)_36%,rgba(20,14,26,0.48)_100%)]" />
+        <div className="absolute left-4 top-4 rounded bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.24em] text-secondary backdrop-blur">
           {offer.badge}
         </div>
         <div className="absolute inset-x-4 bottom-4 flex items-end justify-between">
@@ -194,25 +234,27 @@ function Offer({ offer }: Readonly<{ offer: (typeof offers)[number] }>) {
               {offer.title}
             </h3>
           </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-700 text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-white">
             <ChevronRight className="h-5 w-5" />
           </div>
         </div>
       </div>
       <div className="mb-2 flex items-center gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} className="h-4 w-4 fill-orange-700 text-orange-700" />
+          <Star key={i} className="h-4 w-4 fill-secondary text-secondary" />
         ))}
         <span className="ml-2 text-xs font-bold text-stone-500">{offer.reviews}</span>
       </div>
-      <p className="mb-4 text-sm text-stone-600">{offer.desc}</p>
-      <p
-        className="text-xl font-bold text-[#2d3432]"
-        style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
-      >
-        From {offer.price}
-        <span className="text-sm font-normal text-stone-500"> / night</span>
-      </p>
+      <div className="flex flex-1 flex-col justify-between gap-4 px-1 pb-1">
+        <p className="text-sm leading-relaxed text-stone-600">{offer.desc}</p>
+        <p
+          className="text-xl font-bold text-[#2d3432]"
+          style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
+        >
+          From {offer.price}
+          <span className="text-sm font-normal text-stone-500"> / night</span>
+        </p>
+      </div>
     </article>
   );
 }
@@ -292,13 +334,13 @@ export default function HomePage() {
       <section className="relative h-screen max-h-screen overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=2000&q=90"
-            alt="Luxury resort"
+            src="https://unsplash.com/photos/VuzYM4CzEiA/download?force=true&w=2000"
+            alt="Luxury hotel illuminated at dusk with palm trees"
             fill
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_34%),linear-gradient(96deg,rgba(13,16,15,0.7)_0%,rgba(13,16,15,0.32)_42%,rgba(13,16,15,0.12)_66%,rgba(13,16,15,0.3)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(236,208,244,0.28),transparent_30%),radial-gradient(circle_at_top_right,rgba(156,54,181,0.22),transparent_26%),linear-gradient(96deg,rgba(22,12,27,0.74)_0%,rgba(25,17,33,0.42)_42%,rgba(25,17,33,0.2)_66%,rgba(19,16,24,0.42)_100%)]" />
           <div className="absolute inset-x-0 bottom-0 h-[24vh] bg-[linear-gradient(to_bottom,rgba(249,249,247,0)_0%,rgba(249,249,247,0.42)_62%,rgba(249,249,247,0.82)_100%)]" />
         </div>
         <div className="relative z-10 mx-auto flex h-full w-full max-w-420 flex-col justify-between px-5 pb-4 pt-[4.5rem] sm:px-8 sm:pb-5 sm:pt-24 lg:px-12 lg:pb-6 lg:pt-28 2xl:max-w-390">
@@ -351,7 +393,7 @@ export default function HomePage() {
               <HeroCard />
             </div>
           </div>
-          <div className="mt-2 rounded-[1.25rem] border border-white/18 bg-white/10 p-3.5 backdrop-blur-md sm:mt-3 sm:p-5">
+          <div className="mt-2 rounded-[1.25rem] border border-[rgba(243,227,247,0.24)] bg-[rgba(255,255,255,0.1)] p-3.5 backdrop-blur-md shadow-[0_14px_36px_rgba(47,23,56,0.16)] sm:mt-3 sm:p-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:flex lg:flex-wrap lg:gap-10">
                 {[
@@ -404,7 +446,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {features.map(([title, copy]) => (
                 <div key={title} className="space-y-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--secondary-container)] text-secondary">
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <h4
@@ -420,16 +462,19 @@ export default function HomePage() {
           </div>
           <div className="relative mx-auto w-full max-w-[34rem] lg:max-w-none">
             <div className="flex w-full items-center justify-center overflow-hidden">
-              <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCWAfslXfkrKIm_qpqZrzsi5Fzi0FWBDfxnRNv6klEoyU4YFsVM6KHwxDedGnDX9eygADVAU-YdVjsh6CuzDUdjhWQNKlc0xYu3DXa6ngwsfGc_Cms8aoExddwf5vsvLicviwmMBhsPR13q4lyntNA-dzimJ5x1HS_f5WMQOBIJ319Bc0c_Vlnpp05bG7aykQpeQWYpyovXs_3Y7jzydEDc9G6a8kG2TDTOzuJaHZJmdocGLy4yP7zGoMw13A_N9LasTGMVa79cAE"
-                alt="Luxury Interior"
-                width={544}
-                height={680}
-                className="aspect-[4/5] h-auto w-full max-w-[30rem] rounded-2xl object-cover shadow-[0_18px_44px_rgba(45,52,50,0.12)]"
-              />
+              <div className="relative w-full max-w-[30rem]">
+                <Image
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCWAfslXfkrKIm_qpqZrzsi5Fzi0FWBDfxnRNv6klEoyU4YFsVM6KHwxDedGnDX9eygADVAU-YdVjsh6CuzDUdjhWQNKlc0xYu3DXa6ngwsfGc_Cms8aoExddwf5vsvLicviwmMBhsPR13q4lyntNA-dzimJ5x1HS_f5WMQOBIJ319Bc0c_Vlnpp05bG7aykQpeQWYpyovXs_3Y7jzydEDc9G6a8kG2TDTOzuJaHZJmdocGLy4yP7zGoMw13A_N9LasTGMVa79cAE"
+                  alt="Luxury Interior"
+                  width={544}
+                  height={680}
+                  className="aspect-[4/5] h-auto w-full rounded-2xl object-cover shadow-[0_18px_44px_rgba(59,28,72,0.16)]"
+                />
+                <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(180deg,rgba(156,54,181,0.12)_0%,rgba(255,255,255,0)_48%,rgba(126,45,147,0.18)_100%)]" />
+              </div>
             </div>
             <div className="absolute bottom-4 left-4 right-4 max-w-xs rounded-2xl bg-white/88 p-4 shadow-xl backdrop-blur-xl sm:bottom-6 sm:left-6 sm:right-auto sm:p-5 lg:-bottom-8 lg:-left-4">
-              <p className="mb-2 text-base font-bold italic text-blue-700 sm:text-lg">
+              <p className="mb-2 text-base font-bold italic text-secondary sm:text-lg">
                 &quot;Finally, a platform that understands why I travel, not just where I&apos;m
                 going.&quot;
               </p>
@@ -465,7 +510,7 @@ export default function HomePage() {
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 to-transparent p-6 sm:p-8 md:p-10">
+              <div className="absolute inset-0 flex flex-col justify-end bg-[linear-gradient(180deg,rgba(156,54,181,0.08)_0%,rgba(0,0,0,0)_34%,rgba(14,12,18,0.74)_100%)] p-6 sm:p-8 md:p-10">
                 <h3
                   className="mb-2 text-3xl font-bold text-white"
                   style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
@@ -484,8 +529,9 @@ export default function HomePage() {
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(156,54,181,0.16)_0%,rgba(126,45,147,0.12)_100%)]" />
             </div>
-            <div className="flex min-h-[220px] flex-col justify-between rounded-[1rem] bg-orange-700 p-6 text-white sm:p-8 md:p-10">
+            <div className="flex min-h-[220px] flex-col justify-between rounded-[1rem] bg-secondary p-6 text-white sm:p-8 md:p-10">
               <Globe className="h-9 w-9 sm:h-10 sm:w-10" />
               <div>
                 <h4
@@ -504,7 +550,7 @@ export default function HomePage() {
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-all group-hover:bg-black/40">
+              <div className="absolute inset-0 flex items-center justify-center bg-[rgba(63,32,73,0.18)] transition-all group-hover:bg-[rgba(63,32,73,0.34)]">
                 <button className="rounded-full bg-white px-6 py-2.5 text-sm font-bold text-[#2d3432]">
                   Watch Film
                 </button>
@@ -514,9 +560,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto flex max-w-[1680px] items-center px-5 py-16 sm:px-8 lg:min-h-[calc(100vh-76px)] lg:px-12 xl:py-20 2xl:max-w-[1560px]">
-        <div className="w-full">
-          <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <section className="mx-auto flex h-screen max-w-[1680px] items-center px-5 py-8 sm:px-8 lg:px-12 xl:py-10 2xl:max-w-[1560px]">
+        <div className="flex h-full w-full flex-col justify-center">
+          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-4">
               <SectionEyebrow>Curated Collections</SectionEyebrow>
               <h2
@@ -528,12 +574,12 @@ export default function HomePage() {
             </div>
             <Link
               href="/search?tab=deals"
-              className="border-b border-[#2d3432] pb-1 font-bold text-[#2d3432] transition-colors hover:border-orange-700 hover:text-orange-700"
+              className="border-b border-[#2d3432] pb-1 font-bold text-[#2d3432] transition-colors hover:border-secondary hover:text-secondary"
             >
               See all offers
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="grid flex-1 grid-cols-1 gap-6 overflow-hidden md:auto-rows-fr md:grid-cols-3 md:items-stretch">
             {offers.map((offer) => (
               <Offer key={offer.title} offer={offer} />
             ))}
@@ -548,7 +594,7 @@ export default function HomePage() {
               <span className="rounded-full bg-white/10 px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] backdrop-blur">
                 Editor&apos;s Choice
               </span>
-              <span className="rounded-full border border-orange-700/30 bg-orange-700/20 px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] text-orange-300">
+              <span className="rounded-full border border-[rgba(156,54,181,0.3)] bg-[rgba(156,54,181,0.18)] px-4 py-1 text-xs font-bold uppercase tracking-[0.24em] text-[#ddb2ea]">
                 AI Top Pick
               </span>
             </div>
@@ -571,14 +617,14 @@ export default function HomePage() {
                 'Traditional forest onsen experience',
               ].map((item) => (
                 <li key={item} className="flex items-center gap-4">
-                  <Plus className="h-5 w-5 text-orange-700" />
+                  <Plus className="h-5 w-5 text-secondary" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
             <Link
               href="/search"
-              className="inline-flex rounded-full bg-[#f9f9f7] px-7 py-3 text-sm font-bold text-[#2d3432] transition-all hover:bg-orange-700 hover:text-white sm:px-8 sm:text-base"
+              className="inline-flex rounded-full bg-[#f9f9f7] px-7 py-3 text-sm font-bold text-[#2d3432] transition-all hover:bg-secondary hover:text-white sm:px-8 sm:text-base"
             >
               Book the Experience
             </Link>
@@ -591,7 +637,7 @@ export default function HomePage() {
               height={900}
               className="aspect-[0.95] w-full rounded-[1rem] object-cover shadow-2xl sm:aspect-square"
             />
-            <div className="absolute bottom-4 right-4 flex h-24 w-24 flex-col items-center justify-center rounded-full border-4 border-[#2d3432] bg-orange-700 p-4 text-center transition-transform group-hover:scale-110 sm:bottom-auto sm:-right-6 sm:-top-6 sm:h-32 sm:w-32 sm:border-[6px] md:-right-8 md:-top-8 md:h-40 md:w-40 md:border-8 lg:h-44 lg:w-44">
+            <div className="absolute bottom-4 right-4 flex h-24 w-24 flex-col items-center justify-center rounded-full border-4 border-[#2d3432] bg-secondary p-4 text-center transition-transform group-hover:scale-110 sm:bottom-auto sm:-right-6 sm:-top-6 sm:h-32 sm:w-32 sm:border-[6px] md:-right-8 md:-top-8 md:h-40 md:w-40 md:border-8 lg:h-44 lg:w-44">
               <span
                 className="text-xl font-extrabold text-white sm:text-2xl md:text-3xl"
                 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}
@@ -622,7 +668,7 @@ export default function HomePage() {
               <details
                 key={question}
                 open={index === 1}
-                className={`rounded-[1rem] p-6 sm:p-8 ${index === 1 ? 'border-l-4 border-orange-700 bg-[#e5e9e6]' : 'bg-[#ecefec] transition-all hover:bg-[#e5e9e6]'}`}
+                className={`rounded-[1rem] p-6 sm:p-8 ${index === 1 ? 'border-l-4 border-secondary bg-[#e9e3ec]' : 'bg-[#ecefec] transition-all hover:bg-[#e9e3ec]'}`}
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between">
                   <h4
@@ -632,7 +678,7 @@ export default function HomePage() {
                     {question}
                   </h4>
                   {index === 1 ? (
-                    <Minus className="h-5 w-5 text-orange-700" />
+                    <Minus className="h-5 w-5 text-secondary" />
                   ) : (
                     <Plus className="h-5 w-5 text-stone-700" />
                   )}
@@ -654,7 +700,7 @@ export default function HomePage() {
             fill
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(63,32,73,0.34)_0%,rgba(0,0,0,0.48)_100%)] backdrop-blur-[2px]" />
         </div>
         <div className="relative z-10 mx-auto max-w-[1680px] space-y-8 px-5 text-center text-white sm:px-8 lg:px-12 2xl:max-w-[1560px]">
           <div className="space-y-4">
@@ -673,9 +719,9 @@ export default function HomePage() {
             <input
               type="email"
               placeholder="Your primary email"
-              className="flex-1 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm text-white outline-none transition-all placeholder:text-white/60 focus:bg-white/20 focus:ring-2 focus:ring-orange-700 sm:text-base"
+               className="flex-1 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm text-white outline-none transition-all placeholder:text-white/60 focus:bg-white/20 focus:ring-2 focus:ring-secondary sm:text-base"
             />
-            <button className="rounded-full bg-white px-7 py-3 text-sm font-bold text-[#2d3432] transition-all hover:bg-orange-700 hover:text-white sm:text-base">
+             <button className="rounded-full bg-white px-7 py-3 text-sm font-bold text-[#2d3432] transition-all hover:bg-secondary hover:text-white sm:text-base">
               Subscribe
             </button>
           </div>

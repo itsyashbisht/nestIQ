@@ -4,9 +4,9 @@ import { ChevronRight, Search, SlidersHorizontal, Sparkles, X } from 'lucide-rea
 import Navbar from '@/components/layouts/Navigation';
 import Footer from '@/components/layouts/Footer';
 import HotelCard from '@/components/HotelCard';
-import { AIInsight } from '@/components/index.tsx';
 import { MOCK_HOTELS, MOODS, VIBES } from '@/src/lib/data';
-import { cn } from '@/lib/utils';
+import { cn } from '@/src/lib/utils';
+import { AIInsight } from '@/components/AIInsight';
 
 const RATINGS = ['3+', '4+', '4.5+'];
 const SORTS = ['Most Curated', 'Price: Low to High', 'Price: High to Low', 'Newest Additions'];
@@ -206,7 +206,7 @@ export default function SearchPage() {
               className="rounded-xl p-5 text-white overflow-hidden relative"
               style={{ background: '#0f0f0f' }}
             >
-              <Sparkles size={16} className="text-amber-400 mb-2" />
+                  <Sparkles size={16} className="text-secondary mb-2" />
               <p className="font-poppins font-semibold text-sm mb-1">Membership Perk</p>
               <p className="text-white/60 text-xs mb-3">
                 Unlock "Invisible Service" hotels with your NestIQ Elite status.

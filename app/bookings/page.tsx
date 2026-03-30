@@ -5,8 +5,8 @@ import { Archive, Check, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/layouts/Navigation';
 import Footer from '@/components/layouts/Footer';
 import BookingCard from '@/components/BookingCard';
-import { EmptyState } from '@/components/index.tsx';
 import { MOCK_BOOKINGS } from '@/src/lib/data';
+import { EmptyState } from '@/components/emptyState';
 
 const TABS = ['All', 'Confirmed', 'Pending', 'Completed', 'Cancelled'];
 

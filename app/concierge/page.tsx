@@ -5,7 +5,7 @@ import { BookmarkCheck, Crown, MessageCircle, RotateCcw, Send, Sparkles, User } 
 import Navbar from '@/components/layouts/Navigation';
 import HotelCard from '@/components/HotelCard';
 import { MOCK_HOTELS } from '@/src/lib/data';
-import { cn } from '@/lib/utils';
+import { cn } from '@/src/lib/utils';
 // @ts-ignore
 import { Message } from '@/types';
 
@@ -174,7 +174,7 @@ export default function ConciergePage() {
             <div className="flex items-center gap-3">
               <div
                 className="w-9 h-9 rounded-full flex items-center justify-center"
-                style={{ background: 'linear-gradient(145deg, #9b4701, #b85200)' }}
+                style={{ background: 'linear-gradient(145deg, #9c36b5, #7e2d93)' }}
               >
                 <Sparkles size={16} className="text-white" />
               </div>
@@ -206,7 +206,7 @@ export default function ConciergePage() {
                 {msg.role === 'assistant' && (
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                    style={{ background: 'linear-gradient(145deg, #9b4701, #b85200)' }}
+                    style={{ background: 'linear-gradient(145deg, #9c36b5, #7e2d93)' }}
                   >
                     <Sparkles size={13} className="text-white" />
                   </div>
@@ -244,7 +244,7 @@ export default function ConciergePage() {
               <div className="flex gap-3 justify-start">
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ background: 'linear-gradient(145deg, #9b4701, #b85200)' }}
+                  style={{ background: 'linear-gradient(145deg, #9c36b5, #7e2d93)' }}
                 >
                   <Sparkles size={13} className="text-white" />
                 </div>
@@ -314,7 +314,7 @@ export default function ConciergePage() {
                 onClick={() => sendMessage()}
                 disabled={!input.trim() || loading}
                 className="w-10 h-10 rounded-xl flex items-center justify-center disabled:opacity-40 transition-all hover:scale-105 flex-shrink-0"
-                style={{ background: 'linear-gradient(145deg, #9b4701, #b85200)' }}
+                style={{ background: 'linear-gradient(145deg, #9c36b5, #7e2d93)' }}
               >
                 <Send size={16} className="text-white" />
               </button>
