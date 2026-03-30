@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AxiosError } from 'axios';
 import { authService } from '../apiServices/auth.services';
 import {
   ChangePasswordRequest,
@@ -16,18 +17,40 @@ const getUserFromAuthPayload = (payload: unknown): IUser => {
   return payload as IUser;
 };
 
+const getAccessTokenFromPayload = (payload: unknown): string | null => {
+  if (!payload || typeof payload !== 'object') return null;
+
+  const source = payload as Record<string, unknown>;
+
+  if (typeof source.accessToken === 'string') return source.accessToken;
+
+  const data = source.data as Record<string, unknown> | undefined;
+  if (data && typeof data.accessToken === 'string') return data.accessToken;
+
+  const tokens = source.tokens as Record<string, unknown> | undefined;
+  if (tokens && typeof tokens.accessToken === 'string') return tokens.accessToken;
+
+  return null;
+};
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  const axiosError = error as AxiosError<{ message?: string }>;
+  return axiosError.response?.data?.message || fallback;
+};
+
 // REGISTER
 export const registerUser = createAsyncThunk<IUser, RegisterRequest, { rejectValue: string }>(
   'auth/register',
   async (payload, { rejectWithValue }) => {
     try {
       const response = await authService.register(payload);
-      if (response.data.accessToken) {
-        localStorage.setItem('accessToken', response.data.accessToken);
+      const accessToken = getAccessTokenFromPayload(response.data);
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
       }
       return getUserFromAuthPayload(response.data);
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Registration failed');
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error, 'Registration failed'));
     }
   }
 );
@@ -38,12 +61,13 @@ export const loginUser = createAsyncThunk<IUser, LoginRequest, { rejectValue: st
   async (payload, { rejectWithValue }) => {
     try {
       const response = await authService.login(payload);
-      if (response.data.accessToken) {
-        localStorage.setItem('accessToken', response.data.accessToken);
+      const accessToken = getAccessTokenFromPayload(response.data);
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
       }
       return getUserFromAuthPayload(response.data);
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error, 'Login failed'));
     }
   }
 );
@@ -56,8 +80,8 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
       await authService.logout();
       localStorage.removeItem('accessToken');
       return;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Logout failed');
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error, 'Logout failed'));
     }
   }
 );
@@ -69,8 +93,8 @@ export const changePassword = createAsyncThunk<void, ChangePasswordRequest, { re
     try {
       await authService.changePassword(payload);
       return;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Password change failed');
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error, 'Password change failed'));
     }
   }
 );
@@ -85,7 +109,7 @@ export const forgotPassword = createAsyncThunk<
   try {
     const response = await authService.forgotPassword(payload);
     return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Forgot Password failed');
+  } catch (error: unknown) {
+    return rejectWithValue(getErrorMessage(error, 'Forgot Password failed'));
   }
 });

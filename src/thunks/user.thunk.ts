@@ -1,22 +1,26 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AxiosError } from 'axios';
 import { userService } from '../apiServices/user.services';
-import { IUser } from '@/src/types/auth';
-import { UpdateDetailsRequest } from '@/src/types/user';
+import type { IUser } from '@/src/types/auth';
+import type { UpdateDetailsRequest } from '@/src/types/user';
 
-// GET ME — restores session on page load
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  const axiosError = error as AxiosError<{ message?: string }>;
+  return axiosError.response?.data?.message || fallback;
+};
+
 export const getMe = createAsyncThunk<IUser, void, { rejectValue: string }>(
-  'auth/getMe',
+  'user/getMe',
   async (_, { rejectWithValue }) => {
     try {
       const response = await userService.getMe();
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch user');
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error, 'Failed to fetch user'));
     }
   }
 );
 
-// UPDATE USER DETAILS
 export const updateUserDetails = createAsyncThunk<
   IUser,
   UpdateDetailsRequest,
@@ -25,20 +29,19 @@ export const updateUserDetails = createAsyncThunk<
   try {
     const response = await userService.updateDetails(payload);
     return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Failed to update details');
+  } catch (error: unknown) {
+    return rejectWithValue(getErrorMessage(error, 'Failed to update details'));
   }
 });
 
-// GET ALL USERS — admin only
 export const getAllUsers = createAsyncThunk<IUser[], void, { rejectValue: string }>(
   'user/getAllUsers',
   async (_, { rejectWithValue }) => {
     try {
       const response = await userService.getAllUsers();
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch users');
+    } catch (error: unknown) {
+      return rejectWithValue(getErrorMessage(error, 'Failed to fetch users'));
     }
   }
 );

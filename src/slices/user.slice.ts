@@ -1,19 +1,19 @@
-import { IUser } from '@/src/types/auth';
 import { createSlice } from '@reduxjs/toolkit';
+import type { IUser } from '@/src/types/auth';
 import { getAllUsers, getMe, updateUserDetails } from '@/src/thunks/user.thunk';
 
 interface UserState {
+  profile: IUser | null;
   allUsers: IUser[];
   loading: boolean;
   error: string | null;
-  profile: IUser | null;
 }
 
 const initialState: UserState = {
+  profile: null,
   allUsers: [],
   loading: false,
   error: null,
-  profile: null,
 };
 
 const getErrorMessage = (payload: unknown): string =>
@@ -32,6 +32,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
       .addCase(getMe.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -42,8 +43,10 @@ const userSlice = createSlice({
       })
       .addCase(getMe.rejected, (state, action) => {
         state.loading = false;
+        state.profile = null;
         state.error = getErrorMessage(action.payload);
       })
+
       .addCase(updateUserDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -56,6 +59,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = getErrorMessage(action.payload);
       })
+
       .addCase(getAllUsers.pending, (state) => {
         state.loading = true;
         state.error = null;

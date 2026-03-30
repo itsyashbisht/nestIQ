@@ -39,7 +39,8 @@ const STATUS_MAP = {
 
 export default function OwnerDashboardPage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useSelector((s: RootState) => s.auth);
+  const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
+  const user = useSelector((s: RootState) => s.user.profile);
 
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

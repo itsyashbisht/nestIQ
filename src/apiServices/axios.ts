@@ -42,16 +42,26 @@ REQUEST.interceptors.response.use(
   (error) => {
     console.error('API Error:', error.message);
 
-    // AUTO LOGOUT on 401
+    const requestUrl = String(error.config?.url || '');
+    const isAuthEntryPoint =
+      requestUrl.includes('/users/login') || requestUrl.includes('/users/register');
+    const isSessionProbe = requestUrl.includes('/users/me');
+    const hasClientToken =
+      typeof window !== 'undefined' && Boolean(localStorage.getItem('accessToken'));
+
+    // AUTO LOGOUT on 401 for authenticated flows.
+    // Skip redirect for anonymous /me probes so public pages don't bounce to /login.
     if (
       error.response?.status === 401 &&
       typeof window !== 'undefined' &&
-      !error.config?.url?.includes('/users/login') &&
-      !error.config?.url?.includes('/users/register')
+      !isAuthEntryPoint
     ) {
       console.log('Unauthorized — clearing token');
       localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+
+      if (hasClientToken && !isSessionProbe) {
+        window.location.href = '/login';
+      }
     }
 
     if (error.response?.status === 403) {

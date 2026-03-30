@@ -28,7 +28,8 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
   const searchParams = useSearchParams();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { user, isAuthenticated } = useSelector((s: RootState) => s.auth);
+  const isAuthenticated = useSelector((s: RootState) => s.auth.isAuthenticated);
+  const user = useSelector((s: RootState) => s.user.profile);
 
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
